@@ -1,14 +1,15 @@
 import {Component, HostListener, Input} from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule} from '@angular/common';
 import {ToolbarComponent} from "../toolbar/toolbar.component";
 import {Tools} from "../../utils/tools";
 import {BasicTool} from "../../utils/tools/basicTool";
 import {LineTool} from "../../utils/tools/lineTool";
+import * as isect from "isect";
 
 interface Point {
   x: number,
   y: number
-};
+}
 
 interface Line {
   begin: Point,
@@ -66,6 +67,7 @@ export class CanvaComponent {
 
   discarded : Line[] = [];
   lines : Line[] = [];
+  snapPoints: Point[] = [];
   currentPoint : Point | null = null;
   hoverPoint: Point | null = null;
 
@@ -74,6 +76,9 @@ export class CanvaComponent {
       if (this.currentPoint) {
         let newPoint: Point = this.hoverPoint ?? {x: event.clientX, y: event.clientY};
         this.lines.push({begin: this.currentPoint, end: newPoint});
+
+        this.calculateSnapPoints();
+
         this.currentPoint = newPoint;
         this.discarded = []
       } else {
@@ -82,6 +87,15 @@ export class CanvaComponent {
     }
   }
 
+  calculateSnapPoints() {
+    let x = this.lines.map(x => {return {from: {x: x.begin.x, y: x.begin.y}, to: {x: x.end.x, y: x.end.y}}});
+    let sweep = isect.sweep(x, {});
+    let result = sweep.run();
+    let possiblesPoints: [number, number][] = result.map((x:{point: Point}) => [x.point.x, x.point.y]).concat(this.lines.map(x => [[x.begin.x, x.begin.y], [x.end.x, x.end.y]]).flat())
+    this.snapPoints = [...new Set(possiblesPoints)].map((z: [number, number]) => {
+      return {x: z[0], y: z[1]}
+    });
+  }
 
   onToolChange(tool: Tools) {
     console.log(tool);
@@ -108,9 +122,7 @@ export class CanvaComponent {
   }
 
   trySnap(position: Point) : Point {
-    let closest = this.lines.map(x => [x.begin, x.end]).flat()
-      .sort((a, b) => this.distance(a,position) < this.distance(b, position) ? 1 : -1)
-    closest = closest.filter(x => this.distance(x, position) < 20);
+    let closest = this.snapPoints.filter(x => this.distance(x, position) < 20);
     if (closest.length > 0) return closest[0];
     return position;
   }
