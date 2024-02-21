@@ -34,12 +34,14 @@ export class CanvaComponent {
   @HostListener('document:keydown.control.z') undo() {
     let x = this.lines.pop();
     if (x) this.discarded.push(x);
+    this.calculateSnapPoints();
     this.currentPoint = null;
   }
 
   @HostListener('document:keydown.control.y') redo() {
     let x = this.discarded.pop()
     if (x) this.lines.push(x)
+    this.calculateSnapPoints()
     this.currentPoint = null
   }
 
