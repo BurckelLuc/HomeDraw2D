@@ -1,25 +1,17 @@
-import {LineTool} from "./tools/lineTool";
+import {WallTool} from "./tools/wallTool";
 import {BasicTool} from "./tools/basicTool";
-import {CircleTool} from "./tools/circleTool";
-import {SquareTool} from "./tools/squareTool";
 import {SelectTool} from "./tools/selectTool";
 
 export enum Tools {
-  Line,
-  Circle,
-  Square,
+  Wall,
   Select
 }
 
 export namespace Tools {
   export function getTool(tool: Tools) : BasicTool {
     switch (tool) {
-      case Tools.Line:
-        return new LineTool;
-      case Tools.Circle:
-        return new CircleTool;
-      case Tools.Square:
-        return new SquareTool;
+      case Tools.Wall:
+        return new WallTool;
       case Tools.Select:
         return new SelectTool;
     }

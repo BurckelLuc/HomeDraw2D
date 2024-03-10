@@ -1,25 +1,9 @@
-<app-toolbar style="z-index: 1; position: absolute" (selectedTool)="onToolChange($event)" />
+<app-toolbar style="z-index: 1; position: absolute" />
 
-<svg id="canva" style="z-index: 0; position: absolute" (click)="click($event)" (auxclick)="rightclick($event)" (mousemove)="moveMouse($event)"
-     (contextmenu)="rightclick($event)">
-    <line *ngFor="let line of lines"
-          [attr.x1]="line.begin.x"
-          [attr.x2]="line.end.x"
-          [attr.y1]="line.begin.y"
-          [attr.y2]="line.end.y"
-          style="stroke:rgb(255,0,0);stroke-width:2"/>
-
-    <line *ngIf="currentPoint && hoverPoint"
-          [attr.x1]="currentPoint.x"
-          [attr.y1]="currentPoint.y"
-          [attr.x2]="hoverPoint.x"
-          [attr.y2]="hoverPoint.y"
-          style="stroke:rgb(255,0,0);stroke-width:2"/>
-
-    <circle *ngIf="hoverPoint"
-            [attr.cx]="hoverPoint.x"
-            [attr.cy]="hoverPoint.y"
-            [attr.r]="5"
-    />
+<svg #canva id="canva" style="z-index: 0; position: absolute" (click)="click($event)" (auxclick)="click($event)">
+  <app-wall *ngIf="hoverShape" [_shape]="hoverShape" [isGhost]="true"></app-wall>
+  <svg:g *ngFor="let shape of shapes">
+    <ndc-dynamic [ndcDynamicComponent]="shape.component" [ndcDynamicInputs]="shape.buildInput()"></ndc-dynamic>
+  </svg:g>
 </svg>
 

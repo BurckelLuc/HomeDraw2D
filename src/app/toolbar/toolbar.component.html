@@ -1,8 +1,6 @@
 <div *ngIf="visible" class="row-auto bg-amber-200 max-w-full h-fit">
   <div class="col-auto p-2 justify-around flex flex-row">
-  <button [ngClass]="selectedToolIndex==Tools.Line ? 'bg-white' : ''" class="rounded mx-1" (click)="selectTool(Tools.Line)">Line</button>
-  <button [ngClass]="selectedToolIndex==Tools.Circle ? 'bg-white' : ''" class="rounded mx-1" (click)="selectTool(Tools.Circle)">Circle</button>
-  <button [ngClass]="selectedToolIndex==Tools.Square ? 'bg-white' : ''" class="rounded mx-1" (click)="selectTool(Tools.Square)">Square</button>
+  <button [ngClass]="selectedToolIndex==Tools.Wall ? 'bg-white' : ''" class="rounded mx-1" (click)="selectTool(Tools.Wall)">Line</button>
   <button [ngClass]="selectedToolIndex==Tools.Select ? 'bg-white' : ''" class="rounded mx-1" (click)="selectTool(Tools.Select)">Select</button>
   </div>
 </div>

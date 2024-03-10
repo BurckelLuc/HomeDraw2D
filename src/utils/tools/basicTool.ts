@@ -1,6 +1,11 @@
-import { Line, Point } from "../shapes/shapes";
+import {Line, Point, Shape} from "../shapes/shapes";
+import {ShapesService} from "../../app/services/shapes.service";
 
 export abstract class BasicTool {
-	abstract click(event: MouseEvent, currentPoint: Point | null, hoverPoint: Point | null, snapPoints: Point[], lines:Line[], discarded: Line[]) : Point | null;
+  currentPoint : Point | null = null;
+  hoverPoint : Point | null = null;
+
+	abstract click(event: MouseEvent, shapeService: ShapesService) : any;
 	abstract calculateSnapPoints(snapPoints: Point[], lines:Line[]) : Point[];
+  abstract hoverGhost(event: MouseEvent): any;
 }
