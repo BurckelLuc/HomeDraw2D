@@ -8,7 +8,7 @@ export class SelectTool extends BasicTool {
 	}
 
 
-  hoverGhost(point: Point): any {
+  hoverGhost(point: Point, shapeService: ShapesService): any {
   }
 
   rightClick(shapeService: ShapesService): any {

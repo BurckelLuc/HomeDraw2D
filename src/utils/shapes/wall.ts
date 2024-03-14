@@ -8,7 +8,7 @@ export class Wall extends Shape<WallComponent> {
 
   constructor(begin: Point, end: Point) {
     super(WallComponent);
-    let line: Line = {begin, end};
+    let line: Line = new Line(begin, end);
     this.lines.push(line);
   }
 

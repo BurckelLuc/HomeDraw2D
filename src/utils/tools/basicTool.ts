@@ -8,5 +8,5 @@ export abstract class BasicTool {
 
 	abstract leftClick(clickedPoint: Point, shapeService: ShapesService, clickedOnShape: boolean) : any;
   abstract rightClick(shapeService: ShapesService) : any;
-  abstract hoverGhost(point: Point): any;
+  abstract hoverGhost(point: Point, shapeService: ShapesService) : any;
 }

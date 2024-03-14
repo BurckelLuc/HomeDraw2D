@@ -1,6 +1,5 @@
 import {BasicTool} from "./basicTool";
 import {Line, Point, Shape} from "../shapes/shapes";
-import * as isect from "isect";
 import {Wall} from "../shapes/wall";
 import {ShapesService} from "../../app/services/shapes.service";
 import {WallComponent} from "../../app/shapes/wall/wall.component";
@@ -10,7 +9,9 @@ export class WallTool extends BasicTool {
 
 	override leftClick(point: Point, shapeService: ShapesService, clickedOnShape: boolean = false) {
 			if (this.currentPoint) {
-				let newPoint: Point = this.hoverPoint ?? point;
+				let newPoint: Point =  this.hoverPoint ?? point;
+        if (clickedOnShape) newPoint = point;
+
         let currentPointCopy = this.currentPoint
         this.currentPoint = newPoint;
         if (shapeService.getCurrentShape()) {
@@ -32,14 +33,26 @@ export class WallTool extends BasicTool {
       this.currentPoint = null;
       this.hoverPoint = null;
       shapeService.setCurrentShape(null);
+      shapeService.setHoverShape(null)
   }
 
   override rightClick(shapeService: ShapesService) {
     this.unselect(shapeService);
   }
 
-  override hoverGhost(point :Point) {
-    if (!this.currentPoint) return null;
-    return new Wall(this.currentPoint, point)
+  override hoverGhost(point: Point, shapeService: ShapesService) {
+    if (!this.currentPoint) return;
+    let line = new Line(this.currentPoint, point);
+    let angle = Math.abs(line.getAngle() / Math.PI * 180);
+
+    if (angle < 5 || angle > 175) {
+      point.y = this.currentPoint.y
+    }
+    else if (angle > 85 && angle < 95) {
+      point.x = this.currentPoint.x
+    }
+
+    this.hoverPoint = point;
+    shapeService.setHoverShape(new Wall(this.currentPoint, point))
   }
 }

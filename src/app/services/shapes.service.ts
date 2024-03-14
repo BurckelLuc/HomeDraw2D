@@ -1,5 +1,4 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {ShapeComponent} from "../shapes/shape.component";
 import {Shape} from "../../utils/shapes/shapes";
 
 @Injectable({
@@ -7,9 +6,10 @@ import {Shape} from "../../utils/shapes/shapes";
 })
 export class ShapesService {
   private shapes : Shape[] = []
+  private hoverShape : Shape | null = null
   private currentShape: Shape | null = null;
   private shapeEmitter : EventEmitter<Shape[]> = new EventEmitter()
-
+  private hoverShapeEmitter: EventEmitter<Shape | null> = new EventEmitter();
   constructor() {
   }
 
@@ -22,6 +22,13 @@ export class ShapesService {
     this.currentShape = shape
   }
 
+  setHoverShape(shape: Shape | null) {
+    this.hoverShape = shape;
+    this.hoverShapeEmitter.emit(this.hoverShape);
+  }
+
+
+
   getCurrentShape() {
     return this.currentShape;
   }
@@ -31,8 +38,12 @@ export class ShapesService {
     this.shapeEmitter.emit(this.shapes);
   }
 
-  subscribe(callback : (shapes : Shape[]) => void) {
+  subscribeShapes(callback : (shapes : Shape[]) => void) {
     this.shapeEmitter.subscribe(callback)
+  }
+
+  subscribeHoverShape(callback : (hoverShape: Shape | null) => void) {
+    this.hoverShapeEmitter.subscribe(callback)
   }
 
 }

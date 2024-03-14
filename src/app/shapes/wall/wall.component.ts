@@ -65,9 +65,6 @@ export class WallComponent extends ShapeComponent implements OnInit {
   /*
   Get angle in rad
    */
-  protected getAngle(line: Line): number {
-    return Math.atan2(line.end.y - line.begin.y, line.end.x - line.begin.x );
-  }
 
   buildString() {
     let p = this.shape.lines[0].begin;
