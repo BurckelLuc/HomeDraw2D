@@ -1,0 +1,20 @@
+.line {
+  stroke: black;
+  stroke-width: 10px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  fill: transparent;
+  &:hover {
+    stroke: red;
+
+  }
+}
+
+.ghost {
+  stroke: red;
+}
+
+text {
+  stroke: black;
+  stroke-width: 1px;
+}
