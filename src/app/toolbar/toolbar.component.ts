@@ -1,6 +1,10 @@
-import {Component, EventEmitter, HostListener, Output} from '@angular/core';
+import {Component, EventEmitter, HostListener, Output, Type} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {Tools} from "../../utils/tools";
+import {ToolService} from "../services/tool.service";
+import {WallTool} from "../../utils/tools/wallTool";
+import {BasicTool} from "../../utils/tools/basicTool";
+import {Wall} from "../../utils/shapes/wall";
+import {SelectTool} from "../../utils/tools/selectTool";
 
 @Component({
   selector: 'app-toolbar',
@@ -12,20 +16,26 @@ import {Tools} from "../../utils/tools";
 export class ToolbarComponent {
 
   visible: number = 0;
-  @Output()
-  selectedTool : EventEmitter<Tools> = new EventEmitter()
-  selectedToolIndex = 0;
+  selected! : BasicTool;
 
   @HostListener("document:keydown.t") toggleToolBox() {
     this.visible ^= 1;
   }
 
-
-
-  selectTool(tool: Tools) {
-    this.selectedTool.emit(tool);
-    this.selectedToolIndex = tool;
+  constructor(protected toolService: ToolService) {
+    this.toolService.subscribe(x => {
+      this.selected = x
+    });
   }
 
-  protected readonly Tools = Tools;
+  selectTool(tool: Type<BasicTool>) {
+    this.toolService.setTool(tool);
+  }
+
+  isSelected(selected: BasicTool | undefined, toolType: Type<BasicTool>) {
+    return selected instanceof toolType;
+  }
+
+  protected readonly WallTool = WallTool;
+  protected readonly SelectTool = SelectTool;
 }

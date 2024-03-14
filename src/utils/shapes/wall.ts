@@ -17,6 +17,14 @@ export class Wall extends Shape<WallComponent> {
       let wall= shape as unknown as Wall;
       this.lines.push(wall.lines[0]);
     }
+  }
 
+  getClosestPoint(comparisonPoint : Point) : Point{
+    let points = [this.lines[0].begin].concat(this.lines.map(x => x.end))
+    points.sort((a, b) => a.distance(comparisonPoint) - b.distance(comparisonPoint))
+    if (points.length && points[0].distance(comparisonPoint) < 50) {
+      return points[0];
+    }
+    return comparisonPoint;
   }
 }

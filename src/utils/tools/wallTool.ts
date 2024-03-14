@@ -8,46 +8,38 @@ import {WallComponent} from "../../app/shapes/wall/wall.component";
 
 export class WallTool extends BasicTool {
 
-	override click(event: MouseEvent, shapeService: ShapesService) : Shape | null {
-		if (event.button == 0) {
+	override leftClick(point: Point, shapeService: ShapesService, clickedOnShape: boolean = false) {
 			if (this.currentPoint) {
-				let newPoint: Point = this.hoverPoint ?? {x: event.clientX, y: event.clientY};
+				let newPoint: Point = this.hoverPoint ?? point;
         let currentPointCopy = this.currentPoint
         this.currentPoint = newPoint;
         if (shapeService.getCurrentShape()) {
-          console.log(shapeService.getCurrentShape())
           shapeService.getCurrentShape()?.extend(new Wall(currentPointCopy, newPoint) as unknown as Shape)
-          return shapeService.getCurrentShape()
         } else {
           let shape = new Wall(currentPointCopy, newPoint)
           shapeService.setCurrentShape(shape as unknown as Shape<WallComponent>)
-          return shapeService.getCurrentShape();
+          shapeService.addShape(shape);
+        }
+        if (clickedOnShape) {
+          this.unselect(shapeService)
         }
 			} else {
-				this.currentPoint = this.hoverPoint ?? { x: event.clientX, y: event.clientY}
-        return null;
+				this.currentPoint = this.hoverPoint ?? point
 			}
-		}
-    this.currentPoint = null;
-    shapeService.setCurrentShape(null);
-    return null;
 	}
 
-	calculateSnapPoints(snapPoints: Point[], lines:Line[]) {
-		let x = lines.map(x => {return {from: {x: x.begin.x, y: x.begin.y}, to: {x: x.end.x, y: x.end.y}}});
-		let sweep = isect.sweep(x, {});
-		let result = sweep.run();
-		let possiblesPoints: [number, number][] = result.map((x:{point: Point}) => [x.point.x, x.point.y]).concat(lines.map(x => [[x.begin.x, x.begin.y], [x.end.x, x.end.y]]).flat())
-		snapPoints = [...new Set(possiblesPoints)].map((z: [number, number]) => {
-			return {x: z[0], y: z[1]}
-		});
+  unselect(shapeService: ShapesService) {
+      this.currentPoint = null;
+      this.hoverPoint = null;
+      shapeService.setCurrentShape(null);
+  }
 
-		return snapPoints;
-	}
+  override rightClick(shapeService: ShapesService) {
+    this.unselect(shapeService);
+  }
 
-  override hoverGhost(event:MouseEvent) {
+  override hoverGhost(point :Point) {
     if (!this.currentPoint) return null;
-    let newPoint: Point = {x: event.clientX, y: event.clientY};
-    return new Wall(this.currentPoint, newPoint)
+    return new Wall(this.currentPoint, point)
   }
 }

@@ -1,7 +1,5 @@
 import {Component, HostListener, Injector, Input, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ToolbarComponent} from "../toolbar/toolbar.component";
-import {Tools} from "../../utils/tools";
 import {BasicTool} from "../../utils/tools/basicTool";
 import {WallTool} from "../../utils/tools/wallTool";
 import * as isect from "isect";
@@ -14,6 +12,8 @@ import {Wall} from "../../utils/shapes/wall";
 import {ShapesModule} from "../shapes/shapes.module";
 import {Point, Shape} from "../../utils/shapes/shapes";
 import {MousePositionService} from "../services/mouse-position.service";
+import {ToolbarComponent} from "../toolbar/toolbar.component";
+import {ToolService} from "../services/tool.service";
 
 
 @Component({
@@ -30,14 +30,10 @@ export class CanvaComponent implements OnInit {
   shapes: ShapeWrapper<ShapeComponent, Shape>[] = []
   hoverShape: Shape | null = null;
 
-  @Input()
-  selectedTool: BasicTool = new WallTool();
-
-  constructor(private shapeService: ShapesService, private mousePositionService: MousePositionService) {
+  constructor(private shapeService: ShapesService, private mousePositionService: MousePositionService, private toolService: ToolService) {
     this.shapeService.subscribe(x => {
       this.shapes = x.map(y => new ShapeWrapper(y))
     })
-
   }
 
   ngOnInit(): void {
@@ -45,22 +41,23 @@ export class CanvaComponent implements OnInit {
 
   click(e : MouseEvent) {
     e.preventDefault()
-    let res = this.selectedTool.click(e, this.shapeService)
-    this.hoverShape = this.selectedTool.hoverGhost(e);
-    if (res instanceof Shape) {
-      this.shapeService.addShape(res);
+    if (e.button == 0) {
+      let point = new Point(e.clientX, e.clientY)
+      this.toolService.getTool().leftClick(point, this.shapeService, false)
+      this.hoverShape = this.toolService.getTool().hoverGhost(point);
     }
   }
 
   @HostListener('window:contextmenu', ['$event'])
   noContext(e : MouseEvent) {
     e.preventDefault()
+    this.toolService.getTool().rightClick(this.shapeService)
   }
 
   @HostListener('mousemove', ['$event'])
   moveMouse(e: MouseEvent) {
-    let point : Point = {x: e.x, y: e.y};
-    this.hoverShape = this.selectedTool.hoverGhost(e);
+    let point : Point = new Point(e.x, e.y);
+    this.hoverShape = this.toolService.getTool().hoverGhost(point);
     this.mousePositionService.setMousePosition(point)
   }
 
