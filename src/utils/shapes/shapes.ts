@@ -19,8 +19,8 @@ export class Shape<A = ShapeComponent> {
     this._id = ++Shape._id_generator;
   }
 
-  buildInputs() : Record<string, any> {
-    return {};
+  buildInputs(expand: Record<string, any> = {}) : Record<string, any> {
+    return expand;
   }
 
   extend(shape: Shape) : void {
