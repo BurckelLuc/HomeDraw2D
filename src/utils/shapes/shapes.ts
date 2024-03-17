@@ -25,6 +25,10 @@ export class Shape<A = ShapeComponent> {
 
   extend(shape: Shape) : void {
   }
+
+  unextend(shape: Shape) {
+
+  }
 }
 
 export class Point {

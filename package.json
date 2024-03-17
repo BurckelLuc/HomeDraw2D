@@ -23,6 +23,7 @@
     "express": "^4.18.2",
     "isect": "^3.0.2",
     "ng-dynamic-component": "^10.7.0",
+    "nochoices": "^1.1.4",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"

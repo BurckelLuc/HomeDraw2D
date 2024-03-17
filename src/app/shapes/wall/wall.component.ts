@@ -10,6 +10,7 @@ import { Wall } from "../../../utils/shapes/wall";
 import { Line, Point, Shape } from "../../../utils/shapes/shapes";
 import { ToolService } from "../../services/tool.service";
 import { ShapesService } from "../../services/shapes.service";
+import {CommandService} from "../../services/command.service";
 
 @Component({
   selector: "app-wall",
@@ -33,6 +34,7 @@ export class WallComponent extends ShapeComponent implements OnInit {
     private _viewContainerRef: ViewContainerRef,
     private toolService: ToolService,
     private shapesService: ShapesService,
+    private commandService: CommandService
   ) {
     super(_viewContainerRef);
   }
@@ -45,7 +47,8 @@ export class WallComponent extends ShapeComponent implements OnInit {
       let closestPoint = this.shape.getClosestPoint(clickedPoint);
       this.toolService
         .getTool()
-        .leftClick(closestPoint, this.shapesService, true);
+        .leftClick(closestPoint, this.shapesService, true)
+        .ifSome(x => this.commandService.executeCommand(x));
     }
   }
 

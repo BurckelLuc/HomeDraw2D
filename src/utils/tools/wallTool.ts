@@ -3,11 +3,15 @@ import {Line, Point, Shape} from "../shapes/shapes";
 import {Wall} from "../shapes/wall";
 import {ShapesService} from "../../app/services/shapes.service";
 import {WallComponent} from "../../app/shapes/wall/wall.component";
+import {ICommand} from "../../app/commands/ICommand";
+import {ExtendShapeCommand} from "../../app/commands/extendShapeCommand";
+import {AddShapeCommand} from "../../app/commands/addShapeCommand";
+import {Option} from "nochoices";
 
 
 export class WallTool extends BasicTool {
 
-	override leftClick(point: Point, shapeService: ShapesService, clickedOnShape: boolean = false) {
+	override leftClick(point: Point, shapeService: ShapesService, clickedOnShape: boolean = false) : Option<ICommand> {
 			if (this.currentPoint) {
 				let newPoint: Point =  this.hoverPoint ?? point;
         if (clickedOnShape) newPoint = point;
@@ -15,18 +19,16 @@ export class WallTool extends BasicTool {
         let currentPointCopy = this.currentPoint
         this.currentPoint = newPoint;
         if (shapeService.getCurrentShape()) {
-          shapeService.getCurrentShape()?.extend(new Wall(currentPointCopy, newPoint) as unknown as Shape)
+          let shape = new Wall(currentPointCopy, newPoint) as unknown as Shape;
+          return Option.Some(new ExtendShapeCommand(shape, shapeService.getCurrentShape()!.id, shapeService))
         } else {
           let shape = new Wall(currentPointCopy, newPoint)
-          shapeService.setCurrentShape(shape as unknown as Shape<WallComponent>)
-          shapeService.addShape(shape);
-        }
-        if (clickedOnShape) {
-          this.unselect(shapeService)
+          return Option.Some(new AddShapeCommand(shape, shapeService))
         }
 			} else {
 				this.currentPoint = this.hoverPoint ?? point
 			}
+      return Option.None()
 	}
 
   unselect(shapeService: ShapesService) {
@@ -36,8 +38,9 @@ export class WallTool extends BasicTool {
       shapeService.setHoverShape(null)
   }
 
-  override rightClick(shapeService: ShapesService) {
+  override rightClick(shapeService: ShapesService) : Option<ICommand> {
     this.unselect(shapeService);
+    return Option.None()
   }
 
   override hoverGhost(point: Point, shapeService: ShapesService) {

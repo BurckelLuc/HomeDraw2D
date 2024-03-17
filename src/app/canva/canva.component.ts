@@ -9,6 +9,7 @@ import {Point, Shape} from "../../utils/shapes/shapes";
 import {MousePositionService} from "../services/mouse-position.service";
 import {ToolbarComponent} from "../toolbar/toolbar.component";
 import {ToolService} from "../services/tool.service";
+import {CommandService} from "../services/command.service";
 
 
 @Component({
@@ -23,7 +24,10 @@ export class CanvaComponent implements OnInit {
   shapes: ShapeWrapper<ShapeComponent, Shape>[] = []
   hoverShape: Shape | null = null;
 
-  constructor(private shapeService: ShapesService, private mousePositionService: MousePositionService, private toolService: ToolService) {
+  constructor(private shapeService: ShapesService,
+              private mousePositionService: MousePositionService,
+              private toolService: ToolService,
+              private commandService: CommandService) {
   }
 
   ngOnInit(): void {
@@ -37,7 +41,10 @@ export class CanvaComponent implements OnInit {
     e.preventDefault()
     if (e.button == 0) {
       let point = new Point(e.clientX, e.clientY)
-      this.toolService.getTool().leftClick(point, this.shapeService, false)
+      this.toolService
+        .getTool()
+        .leftClick(point, this.shapeService, false)
+        .ifSome(x => this.commandService.executeCommand(x))
       this.toolService.getTool().hoverGhost(point, this.shapeService)
     }
   }
@@ -53,5 +60,13 @@ export class CanvaComponent implements OnInit {
     let point : Point = new Point(e.x, e.y);
     this.toolService.getTool().hoverGhost(point, this.shapeService)
     this.mousePositionService.setMousePosition(point)
+  }
+
+  @HostListener('document:keydown.control.z', ['$event']) undo(event: KeyboardEvent) {
+    this.commandService.undo()
+  }
+
+  @HostListener('document:keydown.control.y', ['$event']) redo(event: KeyboardEvent) {
+    this.commandService.redo()
   }
 }

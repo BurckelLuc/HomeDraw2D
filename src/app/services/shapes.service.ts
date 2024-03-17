@@ -13,6 +13,10 @@ export class ShapesService {
   constructor() {
   }
 
+  getShapebyId(id: number) {
+    return this.shapes.find(x => x.id == id)!
+  }
+
   addShape(shape: Shape) {
     this.shapes.push(shape);
     this.shapeEmitter.emit(this.shapes);
