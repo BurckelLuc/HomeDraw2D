@@ -1,6 +1,25 @@
-<div *ngIf="visible" class="row-auto bg-amber-200 max-w-full h-fit">
-  <div class="col-auto p-2 justify-around flex flex-row">
-  <button [ngClass]="isSelected(selected, WallTool) ? 'bg-white' : ''" class="rounded mx-1" (click)="selectTool(WallTool)">Line</button>
-  <button [ngClass]="isSelected(selected, SelectTool) ? 'bg-white' : ''" class="rounded mx-1" (click)="selectTool(SelectTool)">Select</button>
-  </div>
+<div *ngIf="visible" class="row-auto h-fit max-w-full bg-amber-200">
+    <div class="col-auto flex flex-row justify-around p-2">
+        <button
+            [ngClass]="isSelected(selected, WallTool) ? 'bg-white' : ''"
+            class="mx-1 rounded"
+            (click)="selectTool(WallTool)"
+        >
+            Line
+        </button>
+        <button
+            [ngClass]="isSelected(selected, SelectTool) ? 'bg-white' : ''"
+            class="mx-1 rounded"
+            (click)="selectTool(SelectTool)"
+        >
+            Select
+        </button>
+        <button
+            [ngClass]="isSelected(selected, DoorTool) ?'bg-white' : ''"
+            class="mx-1 rounded"
+            (click)="selectTool(DoorTool)"
+        >
+            Door
+        </button>
+    </div>
 </div>

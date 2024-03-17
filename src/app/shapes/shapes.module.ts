@@ -1,18 +1,11 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {WallComponent} from "./wall/wall.component";
-
-
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { WallComponent } from "./wall/wall.component";
+import { DoorComponent } from "./door/door.component";
 
 @NgModule({
-  declarations: [
-    WallComponent
-  ],
-  exports: [
-    WallComponent
-  ],
-  imports: [
-    CommonModule
-  ]
+  declarations: [WallComponent, DoorComponent],
+  exports: [WallComponent, DoorComponent],
+  imports: [CommonModule],
 })
-export class ShapesModule { }
+export class ShapesModule {}

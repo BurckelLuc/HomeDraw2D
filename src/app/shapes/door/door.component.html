@@ -1,0 +1,11 @@
+<ng-template #template xmlns:svg="http://www.w3.org/1999/html">
+    <svg:path
+        class="{{isGhost ? 'ghost': ''}}"
+        stroke="red"
+        stroke-width="2px"
+        [attr.transform]="buildTransform()"
+        [attr.d]="buildString()"
+        fill="none"
+        (click)="onClick($event)"
+    ></svg:path>
+</ng-template>
