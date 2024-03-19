@@ -3,3 +3,13 @@
   height: 100vh;
   background-color: beige;
 }
+
+.node {
+  stroke: white;
+  stroke-width: 4px;
+  &:hover {
+    cursor: grab;
+    stroke: black;
+    fill: white;
+  }
+}

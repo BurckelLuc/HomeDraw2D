@@ -1,5 +1,6 @@
-import { DoorComponent } from "../../app/shapes/door/door.component";
-import { Point, Shape } from "./shapes";
+import { DoorComponent } from "../../../app/shapes/door/door.component";
+import { Shape } from "./shape";
+import {Point} from "../point";
 
 export class Door extends Shape<DoorComponent> {
   radius: number;

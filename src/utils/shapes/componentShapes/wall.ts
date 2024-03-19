@@ -1,6 +1,8 @@
-import {Line, Point, Shape} from "./shapes";
-import {WallComponent} from "../../app/shapes/wall/wall.component";
+import {Shape} from "./shape";
+import {WallComponent} from "../../../app/shapes/wall/wall.component";
 import {Type} from "@angular/core";
+import {Point} from "../point";
+import {Line} from "../line";
 
 export class Wall extends Shape<WallComponent> {
 

@@ -1,12 +1,15 @@
 import {BasicTool} from "./basicTool";
-import {Line, Point, Shape} from "../shapes/shapes";
-import {Wall} from "../shapes/wall";
+import {Shape} from "../shapes/componentShapes/shape";
+import {Wall} from "../shapes/componentShapes/wall";
 import {ShapesService} from "../../app/services/shapes.service";
 import {WallComponent} from "../../app/shapes/wall/wall.component";
 import {ICommand} from "../../app/commands/ICommand";
 import {ExtendShapeCommand} from "../../app/commands/extendShapeCommand";
 import {AddShapeCommand} from "../../app/commands/addShapeCommand";
 import {Option} from "nochoices";
+import {Type} from "@angular/core";
+import {Point} from "../shapes/point";
+import {Line} from "../shapes/line";
 
 
 export class WallTool extends BasicTool {
@@ -19,10 +22,10 @@ export class WallTool extends BasicTool {
         let currentPointCopy = this.currentPoint
         this.currentPoint = newPoint;
         if (shapeService.getCurrentShape()) {
-          let shape = new Wall(currentPointCopy, newPoint) as unknown as Shape;
+          let shape = new Wall(shapeService.addOrGetPoint(currentPointCopy), shapeService.addOrGetPoint(newPoint)) as unknown as Shape;
           return Option.Some(new ExtendShapeCommand(shape, shapeService.getCurrentShape()!.id, shapeService))
         } else {
-          let shape = new Wall(currentPointCopy, newPoint)
+          let shape = new Wall(shapeService.addOrGetPoint(currentPointCopy), shapeService.addOrGetPoint(newPoint))
           return Option.Some(new AddShapeCommand(shape, shapeService))
         }
 			} else {
@@ -57,5 +60,9 @@ export class WallTool extends BasicTool {
 
     this.hoverPoint = point;
     shapeService.setHoverShape(new Wall(this.currentPoint, point))
+  }
+
+  override toolType(): Type<WallTool> {
+    return WallTool
   }
 }

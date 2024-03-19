@@ -6,11 +6,13 @@ import {
   ViewContainerRef,
 } from "@angular/core";
 import { ShapeComponent } from "../shape.component";
-import { Wall } from "../../../utils/shapes/wall";
-import { Line, Point, Shape } from "../../../utils/shapes/shapes";
+import { Wall } from "../../../utils/shapes/componentShapes/wall";
+import { Shape } from "../../../utils/shapes/componentShapes/shape";
 import { ToolService } from "../../services/tool.service";
 import { ShapesService } from "../../services/shapes.service";
 import {CommandService} from "../../services/command.service";
+import {Point} from "../../../utils/shapes/point";
+import {Line} from "../../../utils/shapes/line";
 
 @Component({
   selector: "app-wall",

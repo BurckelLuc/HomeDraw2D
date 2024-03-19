@@ -1,5 +1,5 @@
 import {ShapeComponent} from "../../app/shapes/shape.component";
-import {Shape} from "./shapes";
+import {Shape} from "./componentShapes/shape";
 import {Type} from "@angular/core";
 
 export class ShapeWrapper<U = ShapeComponent, T = Shape<U>> {

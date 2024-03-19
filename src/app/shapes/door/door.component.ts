@@ -1,10 +1,11 @@
 import { Component, Input, ViewChild, ViewContainerRef } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ShapeComponent } from "../shape.component";
-import { Door } from "../../../utils/shapes/door";
-import { Point, Shape } from "../../../utils/shapes/shapes";
+import { Door } from "../../../utils/shapes/componentShapes/door";
+import { Shape } from "../../../utils/shapes/componentShapes/shape";
 import { ToolService } from "../../services/tool.service";
 import { ShapesService } from "../../services/shapes.service";
+import {Point} from "../../../utils/shapes/point";
 
 @Component({
   selector: "app-door",

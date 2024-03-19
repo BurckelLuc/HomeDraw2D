@@ -1,16 +1,23 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {Shape} from "../../utils/shapes/shapes";
+import {Shape} from "../../utils/shapes/componentShapes/shape";
+import {Point} from "../../utils/shapes/point";
+import {Node} from "../../utils/shapes/extendedShape/node";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ShapesService {
   private shapes : Shape[] = []
+  private nodes : Node[] = []
+
   private hoverShape : Shape | null = null
   private currentShape: Shape | null = null;
   private shapeEmitter : EventEmitter<Shape[]> = new EventEmitter()
   private hoverShapeEmitter: EventEmitter<Shape | null> = new EventEmitter();
   constructor() {
+    this.shapeEmitter.subscribe(_ => {
+      console.log(this.nodes)
+    })
   }
 
   getShapebyId(id: number) {
@@ -35,6 +42,20 @@ export class ShapesService {
 
   getCurrentShape() {
     return this.currentShape;
+  }
+
+  addOrGetPoint(point: Point) : Node {
+    let foundNode = this.nodes.find(x => x.x == point.x && x.y == point.y)
+    if (foundNode) {
+      return foundNode
+    }
+    let node = Node.fromPoint(point)
+    this.nodes.push(node)
+    return node;
+  }
+
+  getPoints() {
+    return this.nodes;
   }
 
   deleteShape(id: number) {

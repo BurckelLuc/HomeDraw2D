@@ -1,5 +1,6 @@
 import {EventEmitter, Injectable} from '@angular/core';
-import {Point, Shape} from "../../utils/shapes/shapes";
+import {Shape} from "../../utils/shapes/componentShapes/shape";
+import {Point} from "../../utils/shapes/point";
 
 @Injectable({
   providedIn: 'root'

@@ -2,7 +2,7 @@ import {EventEmitter, Injectable, Type} from '@angular/core';
 import {BasicTool} from "../../utils/tools/basicTool";
 import {WallTool} from "../../utils/tools/wallTool";
 import {MousePositionService} from "./mouse-position.service";
-import {Shape} from "../../utils/shapes/shapes";
+import {Shape} from "../../utils/shapes/componentShapes/shape";
 
 @Injectable({
   providedIn: 'root'

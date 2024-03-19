@@ -1,7 +1,8 @@
 import {ICommand} from "./ICommand";
 import {ShapesService} from "../services/shapes.service";
 import {ToolService} from "../services/tool.service";
-import {Point, Shape} from "../../utils/shapes/shapes";
+import {Shape} from "../../utils/shapes/componentShapes/shape";
+import {Point} from "../../utils/shapes/point";
 
 export class ExtendShapeCommand extends ICommand {
   constructor(private shape: Shape, private shapeId: number, shapeService: ShapesService) {

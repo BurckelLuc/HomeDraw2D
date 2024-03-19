@@ -5,5 +5,9 @@
   <svg:g *ngFor="let shape of shapes">
     <ndc-dynamic [ndcDynamicComponent]="shape.component" [ndcDynamicInputs]="shape.buildInput()"></ndc-dynamic>
   </svg:g>
+
+  <g *ngIf="selectedTool == SelectTool">
+    <circle *ngFor="let node of shapeService.getPoints()" class="node" stroke-width="2px" stroke="white" [attr.cx]="node.x" [attr.cy]="node.y" [attr.r]="10" (mousedown)="drag($event, node)" (mousemove)="drag($event, node)" (mouseup)="drag($event, node)"></circle>
+  </g>
 </svg>
 

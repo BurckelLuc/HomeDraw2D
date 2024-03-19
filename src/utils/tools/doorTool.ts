@@ -1,9 +1,10 @@
 import { ShapesService } from "../../app/services/shapes.service";
-import { Door } from "../shapes/door";
-import { Point } from "../shapes/shapes";
+import { Door } from "../shapes/componentShapes/door";
 import { BasicTool } from "./basicTool";
 import {Option} from "nochoices";
 import {ICommand} from "../../app/commands/ICommand";
+import {Type} from "@angular/core";
+import {Point} from "../shapes/point";
 
 export class DoorTool extends BasicTool {
   override leftClick(
@@ -21,5 +22,9 @@ export class DoorTool extends BasicTool {
   override hoverGhost(point: Point, shapeService: ShapesService) {
     this.hoverPoint = point;
     shapeService.setHoverShape(new Door(20, point));
+  }
+
+  override toolType(): Type<DoorTool> {
+    return DoorTool
   }
 }
