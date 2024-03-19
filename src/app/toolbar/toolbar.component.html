@@ -1,25 +1,11 @@
 <div *ngIf="visible" class="row-auto h-fit max-w-full bg-amber-200">
     <div class="col-auto flex flex-row justify-around p-2">
-        <button
-            [ngClass]="isSelected(selected, WallTool) ? 'bg-white' : ''"
-            class="mx-1 rounded"
-            (click)="selectTool(WallTool)"
-        >
-            Line
-        </button>
-        <button
-            [ngClass]="isSelected(selected, SelectTool) ? 'bg-white' : ''"
-            class="mx-1 rounded"
-            (click)="selectTool(SelectTool)"
-        >
-            Select
-        </button>
-        <button
-            [ngClass]="isSelected(selected, DoorTool) ?'bg-white' : ''"
-            class="mx-1 rounded"
-            (click)="selectTool(DoorTool)"
-        >
-            Door
-        </button>
+      <button *ngFor="let tool of tools"
+              [ngClass]="isSelected(selected, tool) ? 'border-gray-800' : 'border-amber-200'"
+              class="mx-1 p-2 border-b-2"
+              (click)="selectTool(tool)"
+      >
+        {{tool.prototype.toolName()}}
+      </button>
     </div>
 </div>

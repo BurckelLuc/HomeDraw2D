@@ -10,8 +10,12 @@ export abstract class BasicTool {
   currentPoint : Point | null = null;
   hoverPoint : Point | null = null;
 
+  // Functionalities
 	abstract leftClick(clickedPoint: Point, shapeService: ShapesService, clickedOnShape: boolean) : Option<ICommand>;
   abstract rightClick(shapeService: ShapesService) : Option<ICommand>;
   abstract hoverGhost(point: Point, shapeService: ShapesService) : void;
+
+  // Utils
   abstract toolType() : Type<BasicTool>
+  abstract toolName() : string
 }

@@ -22,4 +22,8 @@ export class SelectTool extends BasicTool {
   override toolType(): Type<SelectTool> {
     return SelectTool
   }
+
+  override toolName(): string {
+    return "Select";
+  }
 }

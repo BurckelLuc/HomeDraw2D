@@ -27,4 +27,8 @@ export class DoorTool extends BasicTool {
   override toolType(): Type<DoorTool> {
     return DoorTool
   }
+
+  override toolName(): string {
+    return "Door";
+  }
 }

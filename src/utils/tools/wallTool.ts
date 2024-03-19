@@ -65,4 +65,8 @@ export class WallTool extends BasicTool {
   override toolType(): Type<WallTool> {
     return WallTool
   }
+
+  override toolName(): string {
+    return "Wall";
+  }
 }

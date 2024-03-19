@@ -17,6 +17,12 @@ export class ToolbarComponent {
   visible: number = 0;
   selected!: BasicTool;
 
+  protected tools : Type<BasicTool>[] = [
+    WallTool,
+    SelectTool,
+    DoorTool
+  ]
+
   @HostListener("document:keydown.t") toggleToolBox() {
     this.visible ^= 1;
   }
@@ -34,8 +40,4 @@ export class ToolbarComponent {
   isSelected(selected: BasicTool | undefined, toolType: Type<BasicTool>) {
     return selected instanceof toolType;
   }
-
-  protected readonly WallTool = WallTool;
-  protected readonly SelectTool = SelectTool;
-  protected readonly DoorTool = DoorTool;
 }

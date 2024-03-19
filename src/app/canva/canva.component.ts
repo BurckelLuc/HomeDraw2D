@@ -16,6 +16,7 @@ import {SelectTool} from "../../utils/tools/selectTool";
 import {Point} from "../../utils/shapes/point";
 import {Node} from "../../utils/shapes/extendedShape/node";
 import {MoveNodeCommand} from "../commands/moveNodeCommand";
+import {WallTool} from "../../utils/tools/wallTool";
 
 
 @Component({
@@ -44,7 +45,8 @@ export class CanvaComponent implements OnInit {
     this.shapeService.subscribeHoverShape((x) => this.hoverShape = x)
     this.toolService.subscribe(x => {
       this.selectedTool = x.toolType()
-    })
+    });
+    this.toolService.setTool(WallTool);
   }
 
   click(e : MouseEvent) {
