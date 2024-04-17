@@ -42,9 +42,9 @@ export class WallComponent extends ShapeComponent implements OnInit {
   }
 
   onClick(event: MouseEvent): void {
-    if (this.isGhost) return;
+     if (this.isGhost) return;
     event.stopPropagation();
-    if (event.button == 0) {
+    if (event.button== 0) {
       let clickedPoint = new Point(event.clientX, event.clientY);
       let closestPoint = this.shape.getClosestPoint(clickedPoint);
       this.toolService

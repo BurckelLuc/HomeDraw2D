@@ -21,7 +21,7 @@ export class DoorTool extends BasicTool {
 
   override hoverGhost(point: Point, shapeService: ShapesService) {
     this.hoverPoint = point;
-    shapeService.setHoverShape(new Door(20, point));
+    shapeService.setHoverShape(new Door(25, point, 0));
   }
 
   override toolType(): Type<DoorTool> {
