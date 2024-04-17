@@ -18,4 +18,5 @@ export abstract class BasicTool {
   // Utils
   abstract toolType() : Type<BasicTool>
   abstract toolName() : string
+  abstract toolIcon(): string 
 }

@@ -14,7 +14,7 @@ import { DoorTool } from "../../utils/tools/doorTool";
   styleUrl: "./toolbar.component.scss",
 })
 export class ToolbarComponent {
-  visible: number = 0;
+  visible: number = 1;
   selected!: BasicTool;
 
   protected tools : Type<BasicTool>[] = [
