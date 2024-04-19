@@ -1,17 +1,17 @@
-import { BasicTool } from "./basicTool";
-import { Shape } from "../shapes/componentShapes/shape";
-import { Wall } from "../shapes/componentShapes/wall";
-import { ShapesService } from "../../services/shapes.service";
-import { ICommand } from "../../commands/ICommand";
-import { ExtendShapeCommand } from "../../commands/extendShapeCommand";
-import { AddShapeCommand } from "../../commands/addShapeCommand";
-import { Option } from "nochoices";
-import { Type } from "@angular/core";
-import { Point } from "../shapes/point";
-import { Node } from "../shapes/extendedShape/node";
-import { Line } from "../shapes/line";
-import { SplitLineCommand } from "../../commands/splitLineCommand";
-import { CombinedCommand } from "../../commands/combinedCommand";
+import {BasicTool} from "./basicTool";
+import {Shape} from "../shapes/componentShapes/shape";
+import {Wall} from "../shapes/componentShapes/wall";
+import {ShapesService} from "../../services/shapes.service";
+import {ICommand} from "../../commands/ICommand";
+import {ExtendShapeCommand} from "../../commands/extendShapeCommand";
+import {AddShapeCommand} from "../../commands/addShapeCommand";
+import {Option} from "nochoices";
+import {Type} from "@angular/core";
+import {Point} from "../shapes/point";
+import {Node} from "../shapes/extendedShape/node";
+import {Line} from "../shapes/line";
+import {SplitLineCommand} from "../../commands/splitLineCommand";
+import {CombinedCommand} from "../../commands/combinedCommand";
 
 export class WallTool extends BasicTool {
   override leftClick(
@@ -52,6 +52,14 @@ export class WallTool extends BasicTool {
       }
     } else {
       this.currentPoint = this.hoverPoint ?? point;
+      if (clickedOnShape.isSome() && clickedOnShape.unwrap() instanceof Wall) {
+        let shape = clickedOnShape.unwrap() as Wall
+        clickedOnShape.ifSome((shape) => shapeService.setCurrentShape(shape))
+        let result = this.createSplit(shape, this.currentPoint, shapeService)
+        if (result.isSome()) {
+          return Option.Some(new SplitLineCommand(result.unwrap().line, result.unwrap().pointNode, shape, shapeService))
+        }
+      }
     }
     return Option.None();
   }
@@ -66,45 +74,72 @@ export class WallTool extends BasicTool {
     let currentShape = shapeService.getCurrentShape();
     if (!currentShape) {
       this.currentPoint = point;
-      let pointNode = shapeService.addPointAsNode(point);
-      if (shape.getNodes().includes(pointNode)) {
-        return Option.None();
-      }
-      let toSplit = shape.lines
-        .map((x) => x)
-        .sort(
-          (a, b) =>
-            a.calculateLineDiff(pointNode) - b.calculateLineDiff(pointNode),
-        )[0];
+
+      let result = this.createSplit(shape, point, shapeService)
+      if (result.isNone()) return Option.None();
 
       return Option.Some(
-        new SplitLineCommand(toSplit, pointNode, shape, shapeService),
+        new SplitLineCommand(result.unwrap().line, result.unwrap().pointNode, shape, shapeService),
       );
     }
 
     // CLOSE
     if (currentShape.id == shape.id) {
       // Clicked on Self
+
+      let commands: ICommand[] = []
+
+      let result = this.createSplit(shape, point, shapeService)
+
+      result.ifSome(({line, pointNode}) => {
+        commands.push(new SplitLineCommand(line, pointNode, shape, shapeService));
+      })
+
+
       let wall = new Wall(
         shapeService.addPointAsNode(this.currentPoint!),
         shapeService.addPointAsNode(point),
       );
       this.currentPoint = point;
-      return Option.Some(new ExtendShapeCommand(wall, shape.id, shapeService));
+      commands.push(new ExtendShapeCommand(wall, shape.id, shapeService));
+
+      return Option.Some(new CombinedCommand(commands, shapeService));
     } else {
+
+      let commands: ICommand[] = []
+
+      let result = this.createSplit(shape, point, shapeService)
+
+      result.ifSome(({line, pointNode}) => {
+        commands.push(new SplitLineCommand(line, pointNode, shape, shapeService));
+      })
+
       let wall = new Wall(
         shapeService.addPointAsNode(this.currentPoint!),
         shapeService.addPointAsNode(point),
       );
-      let a = new ExtendShapeCommand(wall, currentShape.id, shapeService);
-      let b = new ExtendShapeCommand(
+      commands.push(new ExtendShapeCommand(wall, currentShape.id, shapeService));
+      commands.push(new ExtendShapeCommand(
         shapeService.getShapebyId(currentShape.id),
         shape.id,
         shapeService,
-      );
+      ));
       this.currentPoint = point;
-      return Option.Some(new CombinedCommand([a, b], shapeService));
+
+      return Option.Some(new CombinedCommand(commands, shapeService));
     }
+  }
+
+  createSplit(shape: Wall, point: Point, shapeService: ShapesService): Option<{line: Line, pointNode: Node}>{
+    let pointNode = shapeService.addPointAsNode(point);
+    if (shape.getNodes().includes(pointNode)) return Option.None();
+    let line =  shape.lines
+      .map((x) => x)
+      .sort(
+        (a, b) =>
+          a.calculateLineDiff(pointNode) - b.calculateLineDiff(pointNode),
+      )[0]
+    return Option.Some({line, pointNode});
   }
 
   unselect(shapeService: ShapesService) {
