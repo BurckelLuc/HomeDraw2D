@@ -4,7 +4,6 @@ import { Type } from "@angular/core";
 import { ICommand } from "../../commands/ICommand";
 import { Option } from "nochoices";
 import { Point } from "../shapes/point";
-import { Line } from "../shapes/line";
 
 export abstract class BasicTool {
   currentPoint: Point | null = null;
@@ -22,4 +21,5 @@ export abstract class BasicTool {
   // Utils
   abstract toolType(): Type<BasicTool>;
   abstract toolName(): string;
+  abstract toolIcon(): string;
 }
