@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
-import {CanvaComponent} from "./canva/canva.component";
-import {ShapesModule} from "./shapes/shapes.module";
+import {AppModule} from "./app.module";
+import {RouterModule} from "@angular/router";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, CanvaComponent, ShapesModule],
+  imports: [AppModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

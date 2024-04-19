@@ -1,15 +1,13 @@
 import { Component, HostListener, Type } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { ToolService } from "../services/tool.service";
-import { WallTool } from "../../utils/tools/wallTool";
-import { BasicTool } from "../../utils/tools/basicTool";
-import { SelectTool } from "../../utils/tools/selectTool";
-import { DoorTool } from "../../utils/tools/doorTool";
+import { ToolService } from "../../services/tool.service";
+import { WallTool } from "../../core/tools/wallTool";
+import { BasicTool } from "../../core/tools/basicTool";
+import { SelectTool } from "../../core/tools/selectTool";
+import { DoorTool } from "../../core/tools/doorTool";
 
 @Component({
   selector: "app-toolbar",
-  standalone: true,
-  imports: [CommonModule],
   templateUrl: "./toolbar.component.html",
   styleUrl: "./toolbar.component.scss",
 })

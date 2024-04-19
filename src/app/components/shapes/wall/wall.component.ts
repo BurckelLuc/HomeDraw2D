@@ -6,13 +6,15 @@ import {
   ViewContainerRef,
 } from "@angular/core";
 import { ShapeComponent } from "../shape.component";
-import { Wall } from "../../../utils/shapes/componentShapes/wall";
-import { Shape } from "../../../utils/shapes/componentShapes/shape";
-import { ToolService } from "../../services/tool.service";
-import { ShapesService } from "../../services/shapes.service";
-import {CommandService} from "../../services/command.service";
-import {Point} from "../../../utils/shapes/point";
-import {Line} from "../../../utils/shapes/line";
+import { Wall } from "../../../core/shapes/componentShapes/wall";
+import { Shape } from "../../../core/shapes/componentShapes/shape";
+import { ToolService } from "../../../services/tool.service";
+import { ShapesService } from "../../../services/shapes.service";
+import { CommandService } from "../../../services/command.service";
+import { Point } from "../../../core/shapes/point";
+import { Node } from "../../../core/shapes/extendedShape/node";
+import { Line } from "../../../core/shapes/line";
+import { Option } from "nochoices";
 
 @Component({
   selector: "app-wall",
@@ -36,7 +38,7 @@ export class WallComponent extends ShapeComponent implements OnInit {
     private _viewContainerRef: ViewContainerRef,
     private toolService: ToolService,
     private shapesService: ShapesService,
-    private commandService: CommandService
+    private commandService: CommandService,
   ) {
     super(_viewContainerRef);
   }
@@ -46,12 +48,20 @@ export class WallComponent extends ShapeComponent implements OnInit {
     event.stopPropagation();
     if (event.button == 0) {
       let clickedPoint = new Point(event.clientX, event.clientY);
+      this.findLine(clickedPoint);
       let closestPoint = this.shape.getClosestPoint(clickedPoint);
       this.toolService
         .getTool()
-        .leftClick(closestPoint, this.shapesService, true)
-        .ifSome(x => this.commandService.executeCommand(x));
+        .leftClick(closestPoint, this.shapesService, Option.Some(this.shape))
+        .ifSome((x) => this.commandService.executeCommand(x));
     }
+  }
+
+  findLine(point: Point) {
+    let lines = this.shape.lines.map((x) => x);
+    let node = Node.fromPoint(point);
+    lines.sort((x, y) => x.calculateLineDiff(node) - y.calculateLineDiff(node));
+    return lines[0];
   }
 
   onHover(event: MouseEvent): void {}
@@ -68,20 +78,13 @@ export class WallComponent extends ShapeComponent implements OnInit {
     return y + yPoint * 100;
   }
 
-  protected getCote(line: Line) {
-    return Math.round(
-      Math.sqrt(
-        Math.abs(line.begin.x - line.end.x) ** 2 +
-          Math.abs(line.end.y - line.begin.y) ** 2,
-      ),
-    );
-  }
-
   buildString() {
     let p = this.shape.lines[0].begin;
-    let stringBuilder = [`M${p.x},${p.y}`];
+    let stringBuilder = [``];
     stringBuilder = stringBuilder.concat(
-      this.shape.lines.map((x) => x.end).map((p) => `L${p.x},${p.y}`),
+      this.shape.lines.map(
+        (x) => `M${x.begin.x},${x.begin.y} L${x.end.x},${x.end.y}`,
+      ),
     );
     return stringBuilder.join(" ");
   }

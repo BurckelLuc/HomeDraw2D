@@ -1,5 +1,0 @@
-<ng-template #template xmlns:svg="http://www.w3.org/1999/html">
-  <svg:path [ngClass]="isGhost ? 'ghost': ''" class="line" pointer-events="stroke" [attr.d]="buildString()" (click)="onClick($event)" />
-  <svg:text *ngFor="let line of shape.lines"
-            [attr.x]="getCoteX(line)" [attr.y]="getCoteY(line)" >{{getCote(line)}}</svg:text>
-</ng-template>

@@ -1,27 +1,46 @@
 # Homedraw2d
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.0.
+## Structure du projet
 
-## Development server
+La structure de ce projet suit celle d'une application Angular standard qui est détaillée ci-dessous.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+### Modules [*.module.ts]
 
-## Code scaffolding
+Les [modules](https://angular.io/guide/architecture-modules) permettent de définir les différents composants et service d'une partie de l'application (cf: shapes.module.ts) et de les utiliser dans d'autres parties.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Exemple: Le ShapesModule déclare les différents composant shapes, et ont l'importe dans le AppModule pour que le composant Canvas puisse l'utiliser
 
-## Build
+Pour créer un module, il faut executer la commande `npx ng g m nomdumodule` dans le repertoire voulu.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Running unit tests
+### Composants [app/components]
+Les composants s'occupent de tout ce qui concerne l'affichage d'un element et les interactions avec celui-ci.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Pour se faire, tout les [evenements HTML classiques](https://developer.mozilla.org/fr/docs/Web/Events) et [specifiques a Angular](https://angular.io/guide/event-binding) sont utilisables.
 
-## Running end-to-end tests
+Chaques composants possédents des attributs et des [services](https://angular.io/guide/architecture-services), chacun définis et initialisé dans le constructeur de celui-ci.
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+Pour créer un composant, il faut le créer avec la commande  `npx ng g c nomducomposant` dans le repertoire voulu.
 
-## Further help
+Ensuite, il faut l'importer dans un module pour pouvoir l'utiliser et lui fournir les services et autres modules dont il a besoin.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+### Services [app/services]
+Les [services](https://angular.io/guide/architecture-services) sont des sortes de petites bases de données qui sont accessible à tout moment dans l'application.
+
+On peut executer des actions sur ces services, ou écouter les changements à l'aide d'[EventEmitter](https://angular.io/api/core/EventEmitter).
+
+Afin d'utiliser un service, il faut l'importer dans le module dans lequel le composant est défini, puis dans le constructeur du composant l'ajouter en argument grace a l'[injection de dépendances](https://angular.io/guide/dependency-injection).
+
+
+### Commandes [app/commands]
+Les commandes ne sont pas directement existante dans angular mais sont la pierre angulaire de ce projet.
+
+Celles-ci controlent tout ce qui se passe dans l'application suite a une action de l'utilisateur et qui doit pouvoir être annulée.
+
+Exemple: Création de Shape, déplacement d'un Node.
+
+### Core [app/core]
+Le dossier core contient des fichiers importants qui ne dépendent pas d'angular directement (ou pas du tout dans le meilleur des cas).
+
+Celui-ci contient différentes classes, ainsi que leurs méthodes associées.

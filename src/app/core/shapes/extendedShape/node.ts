@@ -1,16 +1,19 @@
-import {Point} from "../point";
+import { Point } from "../point";
 
 export class Node extends Point {
   private static _id_counter = 1;
-  private id : number;
+  private _id: number;
 
-  constructor(x : number, y: number) {
+  get id() {
+    return this._id;
+  }
+
+  constructor(x: number, y: number) {
     super(x, y);
-    this.id = Node._id_counter++;
+    this._id = Node._id_counter++;
   }
 
   static fromPoint(point: Point) {
     return new Node(point.x, point.y);
   }
-
 }

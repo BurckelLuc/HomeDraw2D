@@ -1,4 +1,4 @@
-import {ShapeComponent} from "../../app/shapes/shape.component";
+import {ShapeComponent} from "../../components/shapes/shape.component";
 import {Shape} from "./componentShapes/shape";
 import {Type} from "@angular/core";
 

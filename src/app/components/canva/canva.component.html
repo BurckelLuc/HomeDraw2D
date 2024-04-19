@@ -1,0 +1,36 @@
+<app-toolbar style="z-index: 1; position: absolute" />
+
+<svg
+    #canva
+    id="canva"
+    style="z-index: 0; position: absolute"
+    (click)="click($event)"
+    (auxclick)="click($event)"
+>
+    <ndc-dynamic
+        *ngIf="hoverShape"
+        [ndcDynamicComponent]="hoverShape.componentType"
+        [ndcDynamicInputs]="hoverShape.buildInputs({_shape: hoverShape, isGhost: true})"
+    ></ndc-dynamic>
+    <svg:g *ngFor="let shape of shapes">
+        <ndc-dynamic
+            [ndcDynamicComponent]="shape.component"
+            [ndcDynamicInputs]="shape.buildInput()"
+        ></ndc-dynamic>
+    </svg:g>
+
+    <g *ngIf="selectedTool == SelectTool">
+        <circle
+            *ngFor="let node of shapeService.getNodes()"
+            class="node"
+            stroke-width="2px"
+            stroke="white"
+            [attr.cx]="node.x"
+            [attr.cy]="node.y"
+            [attr.r]="10"
+            (mousedown)="drag($event, node)"
+            (mousemove)="drag($event, node)"
+            (mouseup)="drag($event, node)"
+        ></circle>
+    </g>
+</svg>

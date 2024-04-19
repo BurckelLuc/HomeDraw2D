@@ -1,6 +1,6 @@
 import {Component, Injectable, Input, OnInit, ViewContainerRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {Shape} from "../../utils/shapes/componentShapes/shape";
+import {Shape} from "../../core/shapes/componentShapes/shape";
 
 @Injectable()
 export abstract class ShapeComponent {
