@@ -32,6 +32,7 @@ On peut executer des actions sur ces services, ou écouter les changements à l'
 
 Afin d'utiliser un service, il faut l'importer dans le module dans lequel le composant est défini, puis dans le constructeur du composant l'ajouter en argument grace a l'[injection de dépendances](https://angular.io/guide/dependency-injection).
 
+Pour créer un service il faut le créer avec la commande `npx ng g s nomduservice` dans le dossier app/service
 
 ### Commandes [app/commands]
 Les commandes ne sont pas directement existante dans angular mais sont la pierre angulaire de ce projet.
