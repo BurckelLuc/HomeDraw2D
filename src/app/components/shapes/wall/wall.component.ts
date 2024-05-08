@@ -68,14 +68,14 @@ export class WallComponent extends ShapeComponent implements OnInit {
 
   protected getCoteX(line: Line) {
     let x = (line.begin.x + line.end.x) / 2;
-    let xPoint = Math.cos(90);
-    return x + 100 * xPoint;
+    let xPoint = line.normalizeAngleX();
+    return x-10 + 30 * xPoint;
   }
 
   protected getCoteY(line: Line) {
     let y = (line.begin.y + line.end.y) / 2;
-    let yPoint = Math.cos(90);
-    return y + yPoint * 100;
+    let yPoint = line.normalizeAngleY();
+    return y + yPoint * 30;
   }
 
   buildString() {
