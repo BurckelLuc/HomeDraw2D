@@ -37,12 +37,18 @@ export class CanvaComponent implements OnInit {
   hoverShape: Shape | null = null;
   selectedTool!: Type<BasicTool>;
 
+  //Grille
+  canvaWidth = 2000;
+  canvaHeight = 2000;
+  cellSize = 25;
+
   constructor(
     protected shapeService: ShapesService,
     private mousePositionService: MousePositionService,
     private toolService: ToolService,
     private commandService: CommandService,
   ) {}
+
 
   ngOnInit(): void {
     this.shapeService.subscribeShapes((x) => {
@@ -53,6 +59,8 @@ export class CanvaComponent implements OnInit {
       this.selectedTool = x.toolType();
     });
     this.toolService.setTool(WallTool);
+    //this.canvaWidth = window.innerWidth;
+    //this.canvaHeight = window.innerHeight;
   }
 
   click(e: MouseEvent) {
@@ -66,6 +74,11 @@ export class CanvaComponent implements OnInit {
       this.toolService.getTool().hoverGhost(point, this.shapeService);
     }
   }
+  /*@HostListener('window:resize', ['$event'])  
+  onResize() {  
+    this.canvaWidth = window.innerWidth;  
+    this.canvaHeight = window.innerHeight;  
+  }  */
 
   @HostListener("window:contextmenu", ["$event"])
   noContext(e: MouseEvent) {
@@ -118,5 +131,16 @@ export class CanvaComponent implements OnInit {
         this.oldNodeBackup = null;
         break;
     }
+  }
+
+  // Calculez les positions des lignes horizontales et verticales de la grille
+  get gridX(): number[] {
+    const cols = Math.floor(this.canvaWidth / this.cellSize);
+    return Array.from({ length: cols + 1 }, (_, i) => i * this.cellSize);
+  }
+
+  get gridY(): number[] {
+      const rows = Math.floor(this.canvaHeight / this.cellSize);
+      return Array.from({ length: rows + 1 }, (_, i) => i * this.cellSize);
   }
 }
