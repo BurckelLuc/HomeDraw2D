@@ -1,11 +1,11 @@
 <div *ngIf="visible" class="row-auto h-fit max-w-full">
-    <div class="col-auto flex flex-row justify-around bg-zinc-800 rounded p-1">
+    <div class="col-auto flex flex-row justify-around bg-zinc-800 rounded p-2 m-2">
       <button *ngFor="let tool of tools"
-              [ngClass]="isSelected(selected, tool) ? 'bg-sky-500' : 'bg-zinc-800'"
-              class="rounded p-1"
+              [ngClass]="isSelected(selected, tool) ? 'bg-orange-500' : 'bg-zinc-800'"
+              class="rounded p-1 mx-1"
               (click)="selectTool(tool)"
       >
-        <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 107.000000 107.000000" preserveAspectRatio="xMidYMid meet">
+        <svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="3em" height="2.5em" viewBox="0 0 107.000000 107.000000" preserveAspectRatio="xMidYMid meet">
           <g fill="#FFFFFF" stroke="none">
           <path [attr.d]="tool.prototype.toolIcon()" />
           </g>
