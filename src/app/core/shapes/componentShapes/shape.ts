@@ -24,10 +24,6 @@ export class Shape<A = ShapeComponent> {
     return expand;
   }
 
-  extend(shape: Shape): void {}
-
-  unextend(shape: Shape) {}
-
   getNodes(): Node[] {
     return [];
   }

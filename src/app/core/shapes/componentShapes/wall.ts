@@ -13,20 +13,6 @@ export class Wall extends Shape<WallComponent> {
     this.lines.push(line);
   }
 
-  override extend(shape: Shape): void {
-    if (shape.componentType == WallComponent) {
-      let wall = shape as unknown as Wall;
-      this.lines = this.lines.concat(...wall.lines)
-    }
-  }
-
-  override unextend(shape: Shape) {
-    if (shape.componentType == WallComponent) {
-      let wall = shape as unknown as Wall;
-      this.lines = this.lines.filter((x) => !wall.lines.includes(x));
-    }
-  }
-
   getClosestPoint(comparisonPoint: Point): Point {
     let points = [this.lines[0].begin].concat(this.lines.map((x) => x.end));
     points.sort(

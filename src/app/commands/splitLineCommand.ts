@@ -1,4 +1,3 @@
-import { Shape } from "../core/shapes/componentShapes/shape";
 import { Wall } from "../core/shapes/componentShapes/wall";
 import { Node } from "../core/shapes/extendedShape/node";
 import { Line } from "../core/shapes/line";
@@ -6,7 +5,7 @@ import { ShapesService } from "../services/shapes.service";
 import { ICommand } from "./ICommand";
 
 export class SplitLineCommand extends ICommand {
-  private splitted: Line[] = [];
+  private splittedWalls: Wall[] = [];
 
   constructor(
     private line: Line,
@@ -15,24 +14,22 @@ export class SplitLineCommand extends ICommand {
     shapeService: ShapesService,
   ) {
     super(shapeService);
-    this.splitted = [
-      new Line(this.line.begin, this.node),
-      new Line(this.node, this.line.end),
+    this.splittedWalls = [
+      new Wall(this.line.begin, this.node),
+      new Wall(this.node, this.line.end),
     ];
   }
 
   override execute(): void {
     this.shapeService.addOrUpdateNode(this.node);
-    this.wall.lines = this.wall.lines
-      .filter((x) => x != this.line)
-      .concat(this.splitted);
+    this.shapeService.deleteShape(this.wall.id);
+    this.splittedWalls.forEach(x => this.shapeService.addShape(x))
   }
 
   override undo(): void {
-    this.wall.lines = this.wall.lines
-      .filter((x) => !this.splitted.includes(x))
-      .concat([this.line]);
+    this.splittedWalls.forEach(x => this.shapeService.deleteShape(x.id));
     this.shapeService.removeNode(this.node.id);
+    this.shapeService.addShape(this.wall);
   }
 
   mergeWithLast(previous: ICommand): ICommand[] {
