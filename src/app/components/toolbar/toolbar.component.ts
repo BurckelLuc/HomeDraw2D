@@ -6,6 +6,7 @@ import { RectangleTool } from "../../core/tools/rectangleTool";
 import { BasicTool } from "../../core/tools/basicTool";
 import { SelectTool } from "../../core/tools/selectTool";
 import { DoorTool } from "../../core/tools/doorTool";
+import {EraseTool} from "../../core/tools/eraseTool";
 
 @Component({
   selector: "app-toolbar",
@@ -20,6 +21,7 @@ export class ToolbarComponent {
     WallTool,
     RectangleTool,
     SelectTool,
+    EraseTool,
     DoorTool
   ]
 
