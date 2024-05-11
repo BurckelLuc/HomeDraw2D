@@ -1,7 +1,6 @@
 import {BasicTool} from "./basicTool";
 import {Shape} from "../shapes/componentShapes/shape";
 import {Wall} from "../shapes/componentShapes/wall";
-import {Rectangle} from "../shapes/componentShapes/rectangle";
 import {ShapesService} from "../../services/shapes.service";
 import {ICommand} from "../../commands/ICommand";
 import {ExtendShapeCommand} from "../../commands/extendShapeCommand";
@@ -13,10 +12,9 @@ import {Node} from "../shapes/extendedShape/node";
 import {Line} from "../shapes/line";
 import {SplitLineCommand} from "../../commands/splitLineCommand";
 import {CombinedCommand} from "../../commands/combinedCommand";
-import { Console } from "console";
 
 export class RectangleTool extends BasicTool {
-  
+
   override leftClick(
     point: Point,
     shapeService: ShapesService,
@@ -28,44 +26,38 @@ export class RectangleTool extends BasicTool {
       }
 
       let newPoint: Point = this.hoverPoint ?? point;
-      
+
       let currentPointCopy = this.currentPoint;
       this.currentPoint = newPoint;
       let pointExtremite1: Point = new Point(newPoint.x,currentPointCopy.y);
       let pointExtremite2: Point = new Point(currentPointCopy.x,newPoint.y);
 
+      let wall = new Wall(shapeService.addPointAsNode(currentPointCopy), shapeService.addPointAsNode(pointExtremite1))
+      let w2 = new Wall(shapeService.addPointAsNode(pointExtremite1), shapeService.addPointAsNode(newPoint))
+      let w3 = new Wall(shapeService.addPointAsNode(newPoint), shapeService.addPointAsNode(pointExtremite2))
+      let w4 = new Wall(shapeService.addPointAsNode(pointExtremite2), shapeService.addPointAsNode(currentPointCopy))
+      wall.extend(w2);
+      wall.extend(w3);
+      wall.extend(w4);
+
       if (shapeService.getCurrentShape()) {
-        
-        let shape = new Rectangle(
-          shapeService.addPointAsNode(currentPointCopy),
-          shapeService.addPointAsNode(pointExtremite1),
-          shapeService.addPointAsNode(newPoint),
-          shapeService.addPointAsNode(pointExtremite2),
-        ) as unknown as Shape;
         return Option.Some(
           new ExtendShapeCommand(
-            shape,
+            wall,
             shapeService.getCurrentShape()!.id,
             shapeService,
           ),
         );
-      } 
-      else {
-        
-        let shape = new Rectangle(
-          shapeService.addPointAsNode(currentPointCopy),
-          shapeService.addPointAsNode(pointExtremite1),
-          shapeService.addPointAsNode(newPoint),
-          shapeService.addPointAsNode(pointExtremite2),
-        );
-        this.unselect(shapeService);
-        return Option.Some(new AddShapeCommand(shape, shapeService));
       }
-    } 
+      else {
+        this.unselect(shapeService);
+        return Option.Some(new AddShapeCommand(wall, shapeService));
+      }
+    }
     else {
       this.currentPoint = this.hoverPoint ?? point;
-      if (clickedOnShape.isSome() && clickedOnShape.unwrap() instanceof Rectangle) {
-        let shape = clickedOnShape.unwrap() as Rectangle
+      if (clickedOnShape.isSome() && clickedOnShape.unwrap() instanceof Wall) {
+        let shape = clickedOnShape.unwrap() as Wall
         clickedOnShape.ifSome((shape) => shapeService.setCurrentShape(shape))
         //let result = this.createSplit(shape, this.currentPoint, shapeService)
         //if (result.isSome()) {
