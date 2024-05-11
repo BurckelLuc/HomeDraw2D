@@ -5,6 +5,7 @@ import { WallTool } from "../../core/tools/wallTool";
 import { BasicTool } from "../../core/tools/basicTool";
 import { SelectTool } from "../../core/tools/selectTool";
 import { DoorTool } from "../../core/tools/doorTool";
+import {EraseTool} from "../../core/tools/eraseTool";
 
 @Component({
   selector: "app-toolbar",
@@ -18,6 +19,7 @@ export class ToolbarComponent {
   protected tools : Type<BasicTool>[] = [
     WallTool,
     SelectTool,
+    EraseTool,
     DoorTool
   ]
 
