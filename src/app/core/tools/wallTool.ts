@@ -3,7 +3,6 @@ import {Shape} from "../shapes/componentShapes/shape";
 import {Wall} from "../shapes/componentShapes/wall";
 import {ShapesService} from "../../services/shapes.service";
 import {ICommand} from "../../commands/ICommand";
-import {ExtendShapeCommand} from "../../commands/extendShapeCommand";
 import {AddShapeCommand} from "../../commands/addShapeCommand";
 import {Option} from "nochoices";
 import {Type} from "@angular/core";
@@ -37,10 +36,9 @@ export class WallTool extends BasicTool {
           shapeService.addPointAsNode(newPoint),
         ) as unknown as Shape;
         return Option.Some(
-          new ExtendShapeCommand(
+          new AddShapeCommand(
             shape,
-            shapeService.getCurrentShape()!.id,
-            shapeService,
+            shapeService
           ),
         );
       } else {
@@ -101,7 +99,7 @@ export class WallTool extends BasicTool {
         shapeService.addPointAsNode(point),
       );
       this.currentPoint = point;
-      commands.push(new ExtendShapeCommand(wall, shape.id, shapeService));
+      commands.push(new AddShapeCommand(wall, shapeService));
 
       return Option.Some(new CombinedCommand(commands, shapeService));
     } else {
@@ -118,10 +116,9 @@ export class WallTool extends BasicTool {
         shapeService.addPointAsNode(this.currentPoint!),
         shapeService.addPointAsNode(point),
       );
-      commands.push(new ExtendShapeCommand(wall, currentShape.id, shapeService));
-      commands.push(new ExtendShapeCommand(
+      commands.push(new AddShapeCommand(wall, shapeService));
+      commands.push(new AddShapeCommand(
         shapeService.getShapebyId(currentShape.id),
-        shape.id,
         shapeService,
       ));
       this.currentPoint = point;
