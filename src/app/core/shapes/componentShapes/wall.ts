@@ -16,7 +16,7 @@ export class Wall extends Shape<WallComponent> {
   override extend(shape: Shape): void {
     if (shape.componentType == WallComponent) {
       let wall = shape as unknown as Wall;
-      this.lines.push(wall.lines[0]);
+      this.lines = this.lines.concat(...wall.lines)
     }
   }
 

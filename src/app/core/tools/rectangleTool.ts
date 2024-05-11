@@ -25,6 +25,8 @@ export class RectangleTool extends BasicTool {
         return this.onClickOnShape(point, clickedOnShape.unwrap(), shapeService);
       }
 
+      console.log(shapeService.getCurrentShape())
+
       let newPoint: Point = this.hoverPoint ?? point;
 
       let currentPointCopy = this.currentPoint;
