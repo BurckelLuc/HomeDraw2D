@@ -21,7 +21,6 @@ export class RemoveShapeCommand extends ICommand {
 	undo(): void {
 		this.shapeService.addShape(this.shape);
 		this.shape.getNodes().forEach((x) => this.shapeService.addOrUpdateNode(x));
-		this.shapeService.setCurrentShape(this.shape);
 	}
 
 }
