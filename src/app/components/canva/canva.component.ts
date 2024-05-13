@@ -37,6 +37,12 @@ export class CanvaComponent implements OnInit {
   hoverShape: Shape | null = null;
   selectedTool!: Type<BasicTool>;
 
+  //Grille
+  canvaWidth = 2000;
+  canvaHeight = 2000;
+  cellSize = 25;
+
+
   constructor(
     protected shapeService: ShapesService,
     private mousePositionService: MousePositionService,
@@ -59,6 +65,12 @@ export class CanvaComponent implements OnInit {
     e.preventDefault();
     if (e.button == 0) {
       let point = new Point(e.clientX, e.clientY);
+
+      // Calculate the closest node based on the grid spacing
+      const closestNodeX = Math.round(point.x / this.cellSize) * this.cellSize;
+      const closestNodeY = Math.round(point.y / this.cellSize) * this.cellSize;
+      const closestNode = new Point(closestNodeX, closestNodeY);
+
       this.toolService
         .getTool()
         .leftClick(point, this.shapeService, Option.None())
@@ -76,12 +88,14 @@ export class CanvaComponent implements OnInit {
   @HostListener("mousemove", ["$event"])
   moveMouse(e: MouseEvent) {
     let point: Point = new Point(e.x, e.y);
+    point.x = Math.round(point.x / this.cellSize) * this.cellSize;
+    point.y = Math.round(point.y / this.cellSize) * this.cellSize;
     this.toolService.getTool().hoverGhost(point, this.shapeService);
     this.mousePositionService.setMousePosition(point);
 
     if (this.currentPoint) {
-      this.currentPoint.x = e.clientX;
-      this.currentPoint.y = e.clientY;
+      this.currentPoint.x = point.x;
+      this.currentPoint.y = point.y;
     }
   }
 
@@ -118,5 +132,16 @@ export class CanvaComponent implements OnInit {
         this.oldNodeBackup = null;
         break;
     }
+  }
+
+  // Calculez les positions des lignes horizontales et verticales de la grille
+  get gridX(): number[] {
+    const cols = Math.floor(this.canvaWidth / this.cellSize);
+    return Array.from({ length: cols + 1 }, (_, i) => i * this.cellSize);
+  }
+
+  get gridY(): number[] {
+    const rows = Math.floor(this.canvaHeight / this.cellSize);
+    return Array.from({ length: rows + 1 }, (_, i) => i * this.cellSize);
   }
 }
