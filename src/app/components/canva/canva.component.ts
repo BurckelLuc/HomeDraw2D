@@ -67,17 +67,23 @@ export class CanvaComponent implements OnInit {
     e.preventDefault();
     if (e.button == 0) {
       let point = new Point(e.clientX, e.clientY);
+
+      // Calculate the closest node based on the grid spacing
+      const closestNodeX = Math.round(point.x / 25) * 25;
+      const closestNodeY = Math.round(point.y / 25) * 25;
+      const closestNode = new Point(closestNodeX, closestNodeY);
+
       this.toolService
         .getTool()
-        .leftClick(point, this.shapeService, Option.None())
+        .leftClick(closestNode, this.shapeService, Option.None())
         .ifSome((x) => this.commandService.executeCommand(x));
       this.toolService.getTool().hoverGhost(point, this.shapeService);
     }
   }
-  /*@HostListener('window:resize', ['$event'])  
-  onResize() {  
-    this.canvaWidth = window.innerWidth;  
-    this.canvaHeight = window.innerHeight;  
+  /*@HostListener('window:resize', ['$event'])
+  onResize() {
+    this.canvaWidth = window.innerWidth;
+    this.canvaHeight = window.innerHeight;
   }  */
 
   @HostListener("window:contextmenu", ["$event"])

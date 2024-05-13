@@ -159,11 +159,8 @@ export class WallTool extends BasicTool {
     );
     let angle = Math.abs((line.getAngle() / Math.PI) * 180);
 
-    if (angle < 5 || angle > 175) {
-      point.y = this.currentPoint.y;
-    } else if (angle > 85 && angle < 95) {
-      point.x = this.currentPoint.x;
-    }
+    point.x = Math.round(point.x / 25) * 25;
+    point.y = Math.round(point.y / 25) * 25;
 
     this.hoverPoint = point;
     shapeService.setHoverShape(

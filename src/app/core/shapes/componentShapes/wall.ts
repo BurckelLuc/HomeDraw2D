@@ -21,6 +21,7 @@ export class Wall extends Shape<WallComponent> {
     if (points.length && points[0].distance(comparisonPoint) < 50) {
       return points[0];
     }
+
     return comparisonPoint;
   }
 
