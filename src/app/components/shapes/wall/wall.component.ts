@@ -1,5 +1,5 @@
 import {
-  Component,
+  Component, HostListener,
   Input,
   OnInit,
   ViewChild,
@@ -27,10 +27,16 @@ export class WallComponent extends ShapeComponent implements OnInit {
 
   @Input("isGhost")
   isGhost: boolean = false;
+  isCoteVisible: number = 1;
 
   get shape(): Wall {
     return this._shape as Wall;
   }
+
+  @HostListener("document:keydown.x") toggleToolBox() {
+    this.isCoteVisible ^= 1;
+  }
+
 
   @ViewChild("template", { static: true }) template: any;
 
