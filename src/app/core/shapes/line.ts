@@ -21,13 +21,11 @@ export class Line {
 
   public normalizeAngleX(): number {
     let angle = this.getAngle() / Math.PI;
-    if(angle>0.50)
-      angle-=1
-    else{
-      if(angle<-0.50)
-        angle+=1;
+    if (angle > 0.5) angle -= 1;
+    else {
+      if (angle < -0.5) angle += 1;
     }
-    angle=2*angle;
+    angle = 2 * angle;
 
     return angle;
   }
@@ -35,23 +33,23 @@ export class Line {
   public normalizeAngleY(): number {
     let angle = this.getAngle() / Math.PI;
 
-    if(angle>0.50)
-      angle-=1
-    else{
-      if(angle<-0.50)
-        angle+=1;
+    if (angle > 0.5) angle -= 1;
+    else {
+      if (angle < -0.5) angle += 1;
     }
-    angle=Math.abs(1-(2*Math.abs(angle)));
+    angle = Math.abs(1 - 2 * Math.abs(angle));
 
-    return -1*angle;
+    return -1 * angle;
   }
 
   public getCote() {
-    return Math.round(
-      Math.sqrt(
-        Math.abs(this.begin.x - this.end.x) ** 2 +
-          Math.abs(this.end.y - this.begin.y) ** 2,
-      ),
-    )/50;
+    return (
+      Math.round(
+        Math.sqrt(
+          Math.abs(this.begin.x - this.end.x) ** 2 +
+            Math.abs(this.end.y - this.begin.y) ** 2,
+        ),
+      ) / 50
+    );
   }
 }
