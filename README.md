@@ -1,4 +1,18 @@
 # Homedraw2d
+Framework : *Angular*  
+Année Scolaire : *M2 SIL 2023-2024*  
+Matière : *Analyse et architecture logicielle orientée objets*  
+Professeur : *M. BECKER Stephane*  
+
+### Présentation
+HomeDraw2D est une application web créée à l'aide d'Angular. Elle permet la création de plan 2D à destination des architectes.
+
+
+### Groupe
+Evann REGNAULT <<e.regnault@etu.unistra.fr>>  \
+Mohamed BENZAHIA <<benzahia@etu.unistra.fr>> \
+Caleb MUKAYA <<mukayagakali@etu.unistra.fr>> \
+Luc BURCKEL <<luc.burckel@etu.unistra.fr>>
 
 ## Structure du projet
 
