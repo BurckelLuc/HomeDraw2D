@@ -1,5 +1,7 @@
 import {
-  Component, HostListener,
+  Component,
+  ElementRef,
+  HostListener,
   Input,
   OnInit,
   ViewChild,
@@ -37,8 +39,9 @@ export class WallComponent extends ShapeComponent implements OnInit {
     this.isCoteVisible ^= 1;
   }
 
-
   @ViewChild("template", { static: true }) template: any;
+
+  @ViewChild("path") path!: ElementRef<SVGPathElement>;
 
   constructor(
     private _viewContainerRef: ViewContainerRef,
@@ -54,13 +57,25 @@ export class WallComponent extends ShapeComponent implements OnInit {
     event.stopPropagation();
     if (event.button == 0) {
       let clickedPoint = new Point(event.clientX, event.clientY);
-      this.findLine(clickedPoint);
-      let closestPoint = this.shape.getClosestPoint(clickedPoint);
+      let pathPoint = this.getPathPoint(clickedPoint);
+      this.findLine(pathPoint);
+      let closestPoint = this.shape.getClosestPoint(pathPoint);
       this.toolService
         .getTool()
         .leftClick(closestPoint, this.shapesService, Option.Some(this.shape))
         .ifSome((x) => this.commandService.executeCommand(x));
     }
+  }
+
+  getPathPoint(point: Point): Point {
+    console.log(this.path);
+    var startPoint = this.path.nativeElement.getPointAtLength(0);
+    var minDistance = Math.sqrt(
+      (point.x - startPoint.x) ** 2 + (point.y - startPoint.y) ** 2,
+    );
+
+    let domPoint = this.path.nativeElement.getPointAtLength(minDistance);
+    return new Point(domPoint.x, domPoint.y);
   }
 
   findLine(point: Point) {
@@ -75,7 +90,7 @@ export class WallComponent extends ShapeComponent implements OnInit {
   protected getCoteX(line: Line) {
     let x = (line.begin.x + line.end.x) / 2;
     let xPoint = line.normalizeAngleX();
-    return x-10 + 30 * xPoint;
+    return x - 10 + 30 * xPoint;
   }
 
   protected getCoteY(line: Line) {
