@@ -1,139 +1,99 @@
-import {BasicTool} from "./basicTool";
-import {Shape} from "../shapes/componentShapes/shape";
-import {Wall} from "../shapes/componentShapes/wall";
-import {ShapesService} from "../../services/shapes.service";
-import {ICommand} from "../../commands/ICommand";
-import {AddShapeCommand} from "../../commands/addShapeCommand";
-import {Option} from "nochoices";
-import {Type} from "@angular/core";
-import {Point} from "../shapes/point";
-import {Node} from "../shapes/extendedShape/node";
-import {Line} from "../shapes/line";
-import {SplitLineCommand} from "../../commands/splitLineCommand";
-import {CombinedCommand} from "../../commands/combinedCommand";
+import { BasicTool } from "./basicTool";
+import { Shape } from "../shapes/componentShapes/shape";
+import { Wall } from "../shapes/componentShapes/wall";
+import { ShapesService } from "../../services/shapes.service";
+import { ICommand } from "../../commands/ICommand";
+import { AddShapeCommand } from "../../commands/addShapeCommand";
+import { Option } from "nochoices";
+import { Type } from "@angular/core";
+import { Point } from "../shapes/point";
+import { Node } from "../shapes/extendedShape/node";
+import { Line } from "../shapes/line";
+import { SplitLineCommand } from "../../commands/splitLineCommand";
+import { CombinedCommand } from "../../commands/combinedCommand";
 
 export class RectangleTool extends BasicTool {
-
   override leftClick(
     point: Point,
     shapeService: ShapesService,
     clickedOnShape: Option<Shape> = Option.None(),
   ): Option<ICommand> {
+    let commands: ICommand[] = [];
     if (this.currentPoint) {
-      if (clickedOnShape.isSome()) {
-        return this.onClickOnShape(point, clickedOnShape.unwrap(), shapeService);
+      if (clickedOnShape.isSome() && clickedOnShape.unwrap() instanceof Wall) {
+        let result = this.createSplit(
+          clickedOnShape.unwrap() as Wall,
+          point,
+          shapeService,
+        );
+        if (result.isSome()) {
+          let unwrapped = result.unwrap();
+          commands.push(
+            new SplitLineCommand(
+              unwrapped.line,
+              unwrapped.pointNode,
+              clickedOnShape.unwrap() as Wall,
+              shapeService,
+            ),
+          );
+        }
       }
 
-      console.log(shapeService.getCurrentShape())
+      console.log(shapeService.getCurrentShape());
 
       let newPoint: Point = this.hoverPoint ?? point;
 
       let currentPointCopy = this.currentPoint;
       this.currentPoint = newPoint;
-      let pointExtremite1: Point = new Point(newPoint.x,currentPointCopy.y);
-      let pointExtremite2: Point = new Point(currentPointCopy.x,newPoint.y);
+      let pointExtremite1: Point = new Point(newPoint.x, currentPointCopy.y);
+      let pointExtremite2: Point = new Point(currentPointCopy.x, newPoint.y);
 
-      let w1 = new Wall(shapeService.addPointAsNode(currentPointCopy), shapeService.addPointAsNode(pointExtremite1));
-      let w2 = new Wall(shapeService.addPointAsNode(pointExtremite1), shapeService.addPointAsNode(newPoint));
-      let w3 = new Wall(shapeService.addPointAsNode(newPoint), shapeService.addPointAsNode(pointExtremite2));
-      let w4 = new Wall(shapeService.addPointAsNode(pointExtremite2), shapeService.addPointAsNode(currentPointCopy));
+      let w1 = new Wall(
+        shapeService.addPointAsNode(currentPointCopy),
+        shapeService.addPointAsNode(pointExtremite1),
+      );
+      let w2 = new Wall(
+        shapeService.addPointAsNode(pointExtremite1),
+        shapeService.addPointAsNode(newPoint),
+      );
+      let w3 = new Wall(
+        shapeService.addPointAsNode(newPoint),
+        shapeService.addPointAsNode(pointExtremite2),
+      );
+      let w4 = new Wall(
+        shapeService.addPointAsNode(pointExtremite2),
+        shapeService.addPointAsNode(currentPointCopy),
+      );
 
-      let commands = [w1, w2, w3, w4].map(x =>
-        new AddShapeCommand(x, shapeService)
-      )
+      commands = commands.concat(
+        [w1, w2, w3, w4].map((x) => new AddShapeCommand(x, shapeService)),
+      );
 
-      return Option.Some(new CombinedCommand(commands, shapeService))
-    }
-    else {
+      return Option.Some(new CombinedCommand(commands, shapeService));
+    } else {
       this.currentPoint = this.hoverPoint ?? point;
       if (clickedOnShape.isSome() && clickedOnShape.unwrap() instanceof Wall) {
-        //let shape = clickedOnShape.unwrap() as Wall
-        clickedOnShape.ifSome((shape) => shapeService.setCurrentShape(shape))
-        //let result = this.createSplit(shape, this.currentPoint, shapeService)
-        //if (result.isSome()) {
-          //return Option.Some(new SplitLineCommand(result.unwrap().line, result.unwrap().pointNode, shape, shapeService))
-        //}
+        clickedOnShape.ifSome((shape) => shapeService.setCurrentShape(shape));
       }
     }
 
     return Option.None();
   }
 
-  onClickOnShape(
+  createSplit(
+    shape: Wall,
     point: Point,
-    shape: Shape,
     shapeService: ShapesService,
-  ): Option<ICommand> {
-    if (!(shape instanceof Wall)) return Option.None();
-
-    let currentShape = shapeService.getCurrentShape();
-    if (!currentShape) {
-      this.currentPoint = point;
-
-      let result = this.createSplit(shape, point, shapeService)
-      if (result.isNone()) return Option.None();
-
-      return Option.Some(
-        new SplitLineCommand(result.unwrap().line, result.unwrap().pointNode, shape, shapeService),
-      );
-    }
-
-    // CLOSE
-    if (currentShape.id == shape.id) {
-      // Clicked on Self
-
-      let commands: ICommand[] = []
-
-      let result = this.createSplit(shape, point, shapeService)
-
-      result.ifSome(({line, pointNode}) => {
-        commands.push(new SplitLineCommand(line, pointNode, shape, shapeService));
-      })
-
-
-      let wall = new Wall(
-        shapeService.addPointAsNode(this.currentPoint!),
-        shapeService.addPointAsNode(point),
-      );
-      this.currentPoint = point;
-      commands.push(new AddShapeCommand(wall, shapeService))
-
-      return Option.Some(new CombinedCommand(commands, shapeService));
-    } else {
-
-      let commands: ICommand[] = []
-
-      let result = this.createSplit(shape, point, shapeService)
-
-      result.ifSome(({line, pointNode}) => {
-        commands.push(new SplitLineCommand(line, pointNode, shape, shapeService));
-      })
-
-      let wall = new Wall(
-        shapeService.addPointAsNode(this.currentPoint!),
-        shapeService.addPointAsNode(point),
-      );
-      commands.push(new AddShapeCommand(wall, shapeService));
-      commands.push(new AddShapeCommand(
-        shapeService.getShapebyId(currentShape.id),
-        shapeService,
-      ));
-      this.currentPoint = point;
-
-      return Option.Some(new CombinedCommand(commands, shapeService));
-    }
-  }
-
-  createSplit(shape: Wall, point: Point, shapeService: ShapesService): Option<{line: Line, pointNode: Node}>{
+  ): Option<{ line: Line; pointNode: Node }> {
     let pointNode = shapeService.addPointAsNode(point);
     if (shape.getNodes().includes(pointNode)) return Option.None();
-    let line =  shape.lines
+    let line = shape.lines
       .map((x) => x)
       .sort(
         (a, b) =>
           a.calculateLineDiff(pointNode) - b.calculateLineDiff(pointNode),
-      )[0]
-    return Option.Some({line, pointNode});
+      )[0];
+    return Option.Some({ line, pointNode });
   }
 
   unselect(shapeService: ShapesService) {
