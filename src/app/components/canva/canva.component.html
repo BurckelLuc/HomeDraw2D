@@ -1,33 +1,13 @@
-<app-toolbar style="z-index: 1; position: absolute;" />
+<app-toolbar style="z-index: 1; position: absolute" />
 
 <svg
-#canva
-id="canva"
-style="z-index: 0; position: absolute"
-(click)="click($event)"
-(auxclick)="click($event)"
+    #canva
+    id="canva"
+    style="z-index: 0; position: absolute"
+    (click)="click($event)"
+    (auxclick)="click($event)"
 >
-<svg:g *ngFor="let x of gridX">
-    <line
-        [attr.x1]="x"
-        y1="0"
-        [attr.x2]="x"
-        [attr.y2]="canvaHeight"
-        stroke="gray"
-        stroke-width="0.5"
-    ></line>
-</svg:g>
-<svg:g *ngFor="let y of gridY">
-    <line
-        x1="0"
-        [attr.y1]="y"
-        [attr.x2]="canvaWidth"
-        [attr.y2]="y"
-        stroke="gray"
-        stroke-width="0.5"
-    ></line>
-</svg:g>
-<ndc-dynamic
+    <ndc-dynamic
         *ngIf="hoverShape"
         [ndcDynamicComponent]="hoverShape.componentType"
         [ndcDynamicInputs]="hoverShape.buildInputs({_shape: hoverShape, isGhost: true})"
@@ -53,5 +33,4 @@ style="z-index: 0; position: absolute"
             (mouseup)="drag($event, node)"
         ></circle>
     </g>
-
 </svg>

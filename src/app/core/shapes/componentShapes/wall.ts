@@ -16,7 +16,7 @@ export class Wall extends Shape<WallComponent> {
   override extend(shape: Shape): void {
     if (shape.componentType == WallComponent) {
       let wall = shape as unknown as Wall;
-      this.lines = this.lines.concat(...wall.lines)
+      this.lines.push(wall.lines[0]);
     }
   }
 
@@ -35,7 +35,6 @@ export class Wall extends Shape<WallComponent> {
     if (points.length && points[0].distance(comparisonPoint) < 50) {
       return points[0];
     }
-
     return comparisonPoint;
   }
 
