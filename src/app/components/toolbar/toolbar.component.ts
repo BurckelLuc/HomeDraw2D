@@ -2,7 +2,6 @@ import { Component, HostListener, Type } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { ToolService } from "../../services/tool.service";
 import { WallTool } from "../../core/tools/wallTool";
-import { RectangleTool } from "../../core/tools/rectangleTool";
 import { BasicTool } from "../../core/tools/basicTool";
 import { SelectTool } from "../../core/tools/selectTool";
 import { DoorTool } from "../../core/tools/doorTool";
@@ -18,7 +17,6 @@ export class ToolbarComponent {
 
   protected tools : Type<BasicTool>[] = [
     WallTool,
-    RectangleTool,
     SelectTool,
     DoorTool
   ]
