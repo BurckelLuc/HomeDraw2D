@@ -49,7 +49,6 @@ export class CanvaComponent implements OnInit {
     private commandService: CommandService,
   ) {}
 
-
   ngOnInit(): void {
     this.shapeService.subscribeShapes((x) => {
       this.shapes = x.map((y) => new ShapeWrapper(y));
@@ -69,8 +68,8 @@ export class CanvaComponent implements OnInit {
       let point = new Point(e.clientX, e.clientY);
 
       // Calculate the closest node based on the grid spacing
-      const closestNodeX = Math.round(point.x / 25) * 25;
-      const closestNodeY = Math.round(point.y / 25) * 25;
+      const closestNodeX = Math.round(point.x / this.cellSize) * this.cellSize;
+      const closestNodeY = Math.round(point.y / this.cellSize) * this.cellSize;
       const closestNode = new Point(closestNodeX, closestNodeY);
 
       this.toolService
@@ -95,12 +94,14 @@ export class CanvaComponent implements OnInit {
   @HostListener("mousemove", ["$event"])
   moveMouse(e: MouseEvent) {
     let point: Point = new Point(e.x, e.y);
+    point.x = Math.round(point.x / this.cellSize) * this.cellSize;
+    point.y = Math.round(point.y / this.cellSize) * this.cellSize;
     this.toolService.getTool().hoverGhost(point, this.shapeService);
     this.mousePositionService.setMousePosition(point);
 
     if (this.currentPoint) {
-      this.currentPoint.x = e.clientX;
-      this.currentPoint.y = e.clientY;
+      this.currentPoint.x = point.x;
+      this.currentPoint.y = point.y;
     }
   }
 
@@ -146,7 +147,7 @@ export class CanvaComponent implements OnInit {
   }
 
   get gridY(): number[] {
-      const rows = Math.floor(this.canvaHeight / this.cellSize);
-      return Array.from({ length: rows + 1 }, (_, i) => i * this.cellSize);
+    const rows = Math.floor(this.canvaHeight / this.cellSize);
+    return Array.from({ length: rows + 1 }, (_, i) => i * this.cellSize);
   }
 }
