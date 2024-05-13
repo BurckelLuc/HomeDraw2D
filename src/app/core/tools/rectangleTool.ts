@@ -3,7 +3,6 @@ import {Shape} from "../shapes/componentShapes/shape";
 import {Wall} from "../shapes/componentShapes/wall";
 import {ShapesService} from "../../services/shapes.service";
 import {ICommand} from "../../commands/ICommand";
-import {ExtendShapeCommand} from "../../commands/extendShapeCommand";
 import {AddShapeCommand} from "../../commands/addShapeCommand";
 import {Option} from "nochoices";
 import {Type} from "@angular/core";
@@ -34,32 +33,21 @@ export class RectangleTool extends BasicTool {
       let pointExtremite1: Point = new Point(newPoint.x,currentPointCopy.y);
       let pointExtremite2: Point = new Point(currentPointCopy.x,newPoint.y);
 
-      let wall = new Wall(shapeService.addPointAsNode(currentPointCopy), shapeService.addPointAsNode(pointExtremite1))
-      let w2 = new Wall(shapeService.addPointAsNode(pointExtremite1), shapeService.addPointAsNode(newPoint))
-      let w3 = new Wall(shapeService.addPointAsNode(newPoint), shapeService.addPointAsNode(pointExtremite2))
-      let w4 = new Wall(shapeService.addPointAsNode(pointExtremite2), shapeService.addPointAsNode(currentPointCopy))
-      wall.extend(w2);
-      wall.extend(w3);
-      wall.extend(w4);
+      let w1 = new Wall(shapeService.addPointAsNode(currentPointCopy), shapeService.addPointAsNode(pointExtremite1));
+      let w2 = new Wall(shapeService.addPointAsNode(pointExtremite1), shapeService.addPointAsNode(newPoint));
+      let w3 = new Wall(shapeService.addPointAsNode(newPoint), shapeService.addPointAsNode(pointExtremite2));
+      let w4 = new Wall(shapeService.addPointAsNode(pointExtremite2), shapeService.addPointAsNode(currentPointCopy));
 
-      if (shapeService.getCurrentShape()) {
-        return Option.Some(
-          new ExtendShapeCommand(
-            wall,
-            shapeService.getCurrentShape()!.id,
-            shapeService,
-          ),
-        );
-      }
-      else {
-        this.unselect(shapeService);
-        return Option.Some(new AddShapeCommand(wall, shapeService));
-      }
+      let commands = [w1, w2, w3, w4].map(x =>
+        new AddShapeCommand(x, shapeService)
+      )
+
+      return Option.Some(new CombinedCommand(commands, shapeService))
     }
     else {
       this.currentPoint = this.hoverPoint ?? point;
       if (clickedOnShape.isSome() && clickedOnShape.unwrap() instanceof Wall) {
-        let shape = clickedOnShape.unwrap() as Wall
+        //let shape = clickedOnShape.unwrap() as Wall
         clickedOnShape.ifSome((shape) => shapeService.setCurrentShape(shape))
         //let result = this.createSplit(shape, this.currentPoint, shapeService)
         //if (result.isSome()) {
@@ -108,7 +96,7 @@ export class RectangleTool extends BasicTool {
         shapeService.addPointAsNode(point),
       );
       this.currentPoint = point;
-      commands.push(new ExtendShapeCommand(wall, shape.id, shapeService));
+      commands.push(new AddShapeCommand(wall, shapeService))
 
       return Option.Some(new CombinedCommand(commands, shapeService));
     } else {
@@ -125,10 +113,9 @@ export class RectangleTool extends BasicTool {
         shapeService.addPointAsNode(this.currentPoint!),
         shapeService.addPointAsNode(point),
       );
-      commands.push(new ExtendShapeCommand(wall, currentShape.id, shapeService));
-      commands.push(new ExtendShapeCommand(
+      commands.push(new AddShapeCommand(wall, shapeService));
+      commands.push(new AddShapeCommand(
         shapeService.getShapebyId(currentShape.id),
-        shape.id,
         shapeService,
       ));
       this.currentPoint = point;
