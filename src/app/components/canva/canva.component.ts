@@ -73,7 +73,7 @@ export class CanvaComponent implements OnInit {
 
       this.toolService
         .getTool()
-        .leftClick(point, this.shapeService, Option.None())
+        .leftClick(closestNode, this.shapeService, Option.None())
         .ifSome((x) => this.commandService.executeCommand(x));
       this.toolService.getTool().hoverGhost(point, this.shapeService);
     }

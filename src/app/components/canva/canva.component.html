@@ -7,6 +7,26 @@
     (click)="click($event)"
     (auxclick)="click($event)"
 >
+    <svg:g *ngFor="let x of gridX">
+        <line
+            [attr.x1]="x"
+            y1="0"
+            [attr.x2]="x"
+            [attr.y2]="canvaHeight"
+            stroke="gray"
+            stroke-width="0.5"
+        ></line>
+    </svg:g>
+    <svg:g *ngFor="let y of gridY">
+        <line
+            x1="0"
+            [attr.y1]="y"
+            [attr.x2]="canvaWidth"
+            [attr.y2]="y"
+            stroke="gray"
+            stroke-width="0.5"
+        ></line>
+    </svg:g>
     <ndc-dynamic
         *ngIf="hoverShape"
         [ndcDynamicComponent]="hoverShape.componentType"

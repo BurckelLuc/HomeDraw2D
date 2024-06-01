@@ -49,7 +49,7 @@ export class Line {
           Math.abs(this.begin.x - this.end.x) ** 2 +
             Math.abs(this.end.y - this.begin.y) ** 2,
         ),
-      ) / 50
+      ) / 25
     );
   }
 }
